@@ -13,6 +13,7 @@ import {
   Briefcase,
   FileText,
   TrendingUp,
+  ClipboardList,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -38,6 +39,11 @@ const navItems = [
     title: "Tailoring",
     href: "/dashboard/tailoring",
     icon: Target,
+  },
+  {
+    title: "Tracker",
+    href: "/dashboard/tracker",
+    icon: ClipboardList,
   },
   {
     title: "Insights",
