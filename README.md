@@ -20,6 +20,8 @@
 - [Getting Started](#getting-started)
 - [Environment Variables](#environment-variables)
 - [Database Setup](#database-setup)
+- [Google OAuth Setup](#google-oauth-setup)
+- [LinkedIn OAuth Setup](#linkedin-oauth-setup)
 - [Stripe Setup](#stripe-setup)
 - [Deployment](#deployment)
 - [Phase Breakdown](#phase-breakdown)
@@ -246,6 +248,143 @@ LINKEDIN_CLIENT_SECRET=...
 # Google Search Console (optional)
 NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=...
 ```
+
+---
+
+## Google OAuth Setup
+
+Google OAuth lets users sign in with their Google account. This is the **recommended** social login — it works out of the box once configured.
+
+### Step 1 — Create a Google Cloud Project
+
+1. Go to [console.cloud.google.com](https://console.cloud.google.com)
+2. Click **Select a project → New Project**
+3. Name it `HireFlow AI` (or any name) and click **Create**
+
+### Step 2 — Enable the Google Identity API
+
+1. In the left sidebar go to **APIs & Services → Library**
+2. Search for **"Google Identity"** or **"OAuth"**
+3. Click **Google Identity Platform** → **Enable**
+
+### Step 3 — Configure the OAuth Consent Screen
+
+1. Go to **APIs & Services → OAuth consent screen**
+2. Select **External** → **Create**
+3. Fill in:
+   - **App name**: `HireFlow AI`
+   - **User support email**: your email
+   - **Developer contact email**: your email
+4. Click **Save and Continue** through all steps
+5. Under **Test users**, add your own email for testing
+6. Click **Back to Dashboard**
+
+### Step 4 — Create OAuth Credentials
+
+1. Go to **APIs & Services → Credentials**
+2. Click **+ Create Credentials → OAuth client ID**
+3. Application type: **Web application**
+4. Name: `HireFlow AI Web`
+5. Under **Authorized redirect URIs**, add:
+   ```
+   https://YOUR_SUPABASE_PROJECT.supabase.co/auth/v1/callback
+   ```
+   Replace `YOUR_SUPABASE_PROJECT` with your actual Supabase project ref (found in Supabase → Settings → General).
+6. Click **Create**
+7. Copy the **Client ID** and **Client Secret**
+
+### Step 5 — Enable Google in Supabase
+
+1. Go to your [Supabase Dashboard](https://supabase.com/dashboard)
+2. Select your project → **Authentication → Providers**
+3. Find **Google** → toggle **Enable**
+4. Paste your **Client ID** and **Client Secret**
+5. Click **Save**
+
+### Step 6 — Add to Environment Variables
+
+```env
+# No extra env vars needed for Google — Supabase handles it.
+# The signInWithGoogle() server action uses Supabase Auth directly.
+```
+
+> ✅ Google login is now live. Test it at `/login` — clicking "Google" should redirect to Google's consent screen.
+
+---
+
+## LinkedIn OAuth Setup
+
+LinkedIn OAuth allows users to sign in with LinkedIn. This is **optional** and requires LinkedIn Developer App approval.
+
+> ⚠️ **LinkedIn login is currently disabled by default** in the UI (shows "Coming Soon" badge). Enable it by setting `NEXT_PUBLIC_LINKEDIN_ENABLED=true` after completing setup below.
+
+### Step 1 — Create a LinkedIn Developer App
+
+1. Go to [linkedin.com/developers/apps](https://www.linkedin.com/developers/apps)
+2. Click **Create app**
+3. Fill in:
+   - **App name**: `HireFlow AI`
+   - **LinkedIn Page**: Create or link a company page (required)
+   - **App logo**: Upload your logo
+4. Click **Create app**
+
+### Step 2 — Configure OAuth Settings
+
+1. In your app dashboard, go to the **Auth** tab
+2. Under **OAuth 2.0 settings**, add the following **Authorized redirect URL**:
+   ```
+   https://YOUR_SUPABASE_PROJECT.supabase.co/auth/v1/callback
+   ```
+3. Click **Update**
+4. Copy your **Client ID** and **Client Secret** from the same page
+
+### Step 3 — Request Required OAuth Scopes
+
+1. Go to the **Products** tab in your LinkedIn app
+2. Request access to **Sign In with LinkedIn using OpenID Connect**
+   - This grants: `openid`, `profile`, `email` scopes
+3. Wait for approval (usually instant for OpenID Connect)
+
+### Step 4 — Enable LinkedIn in Supabase
+
+1. Go to your [Supabase Dashboard](https://supabase.com/dashboard)
+2. Select your project → **Authentication → Providers**
+3. Find **LinkedIn (OIDC)** → toggle **Enable**
+4. Paste your **Client ID** and **Client Secret**
+5. Click **Save**
+
+### Step 5 — Add to Environment Variables
+
+```env
+# LinkedIn OAuth credentials
+LINKEDIN_CLIENT_ID=your_linkedin_client_id
+LINKEDIN_CLIENT_SECRET=your_linkedin_client_secret
+
+# Enable LinkedIn login button in the UI
+NEXT_PUBLIC_LINKEDIN_ENABLED=true
+```
+
+### Step 6 — Enable the Button in UI
+
+Once your credentials are set and tested, set the flag in `.env.local`:
+
+```env
+NEXT_PUBLIC_LINKEDIN_ENABLED=true
+```
+
+The LinkedIn button on `/login` and `/signup` will automatically switch from "Coming Soon" to a live OAuth button.
+
+> ✅ LinkedIn login is now live. Test it at `/login` — clicking "LinkedIn" should redirect to LinkedIn's consent screen.
+
+### Troubleshooting OAuth
+
+| Issue | Fix |
+|-------|-----|
+| `redirect_uri_mismatch` | Make sure the Supabase callback URL is added exactly in Google/LinkedIn app settings |
+| `invalid_client` | Double-check Client ID and Secret are pasted correctly in Supabase |
+| LinkedIn shows "App not approved" | Request the **Sign In with LinkedIn using OpenID Connect** product in the Products tab |
+| Google shows "Access blocked" | Publish your OAuth consent screen (move from Testing to Production) |
+| Supabase callback 404 | Verify your Supabase project URL is correct in the redirect URI |
 
 ---
 

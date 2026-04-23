@@ -16,10 +16,14 @@ import { Separator } from "@/components/ui/separator";
 import { GoogleIcon, LinkedInIcon } from "@/components/icons";
 import {
   signInWithGoogle,
-  signInWithLinkedIn,
   signInWithMagicLink,
 } from "@/lib/auth-actions";
 import { Zap, Mail, Loader2, CheckCircle2 } from "lucide-react";
+
+// LinkedIn OAuth is configured but not yet enabled in production.
+// Set NEXT_PUBLIC_LINKEDIN_ENABLED=true in .env.local once your
+// LinkedIn Developer App is approved and credentials are added.
+const LINKEDIN_ENABLED = process.env.NEXT_PUBLIC_LINKEDIN_ENABLED === "true";
 
 export default function SignupPage() {
   const [loading, setLoading] = useState(false);
@@ -76,13 +80,43 @@ export default function SignupPage() {
                   Google
                 </Button>
               </form>
-              <form action={signInWithLinkedIn}>
-                <Button variant="outline" className="w-full" type="submit">
-                  <LinkedInIcon className="h-4 w-4 mr-2" />
-                  LinkedIn
-                </Button>
-              </form>
+
+              {LINKEDIN_ENABLED ? (
+                /* LinkedIn enabled — real OAuth flow */
+                <form action={async () => {
+                  const { signInWithLinkedIn } = await import("@/lib/auth-actions");
+                  await signInWithLinkedIn();
+                }}>
+                  <Button variant="outline" className="w-full" type="submit">
+                    <LinkedInIcon className="h-4 w-4 mr-2" />
+                    LinkedIn
+                  </Button>
+                </form>
+              ) : (
+                /* LinkedIn disabled — graceful "Coming Soon" state */
+                <div className="relative">
+                  <Button
+                    variant="outline"
+                    className="w-full opacity-60 cursor-not-allowed"
+                    disabled
+                    type="button"
+                    title="LinkedIn login is coming soon"
+                  >
+                    <LinkedInIcon className="h-4 w-4 mr-2" />
+                    LinkedIn
+                  </Button>
+                  <span className="absolute -top-2 -right-2 rounded-full bg-muted border border-border px-1.5 py-0.5 text-[9px] font-semibold text-muted-foreground uppercase tracking-wide leading-none">
+                    Soon
+                  </span>
+                </div>
+              )}
             </div>
+
+            {!LINKEDIN_ENABLED && (
+              <p className="text-xs text-center text-muted-foreground -mt-1">
+                LinkedIn sign-up is coming soon. Use Google or email magic link for now.
+              </p>
+            )}
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">

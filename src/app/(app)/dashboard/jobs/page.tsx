@@ -9,9 +9,6 @@ import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
@@ -30,7 +27,9 @@ import {
   Globe,
   Building2,
   Loader2,
-  ChevronDown,
+  Database,
+  RefreshCw,
+  Info,
 } from "lucide-react";
 import type { Job, JobFilters, JobType, ExperienceLevel } from "@/lib/job-types";
 import { JOB_TYPE_LABELS, EXPERIENCE_LABELS } from "@/lib/job-types";
@@ -53,6 +52,7 @@ export default function JobsPage() {
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [showSaved, setShowSaved] = useState(false);
+  const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
 
   // Filters
   const [search, setSearch] = useState("");
@@ -84,6 +84,7 @@ export default function JobsPage() {
     }
 
     setJobs(data);
+    setLastRefreshed(new Date());
     setLoading(false);
   }, []);
 
@@ -143,7 +144,7 @@ export default function JobsPage() {
       if (period === "yearly" && n >= 1000) return `${currency === "USD" ? "$" : currency}${(n / 1000).toFixed(0)}k`;
       return `${currency === "USD" ? "$" : currency}${n.toLocaleString()}`;
     };
-    if (min && max) return `${fmt(min)} - ${fmt(max)}${period === "hourly" ? "/hr" : period === "monthly" ? "/mo" : "/yr"}`;
+    if (min && max) return `${fmt(min)} – ${fmt(max)}${period === "hourly" ? "/hr" : period === "monthly" ? "/mo" : "/yr"}`;
     if (min) return `${fmt(min)}+${period === "hourly" ? "/hr" : period === "monthly" ? "/mo" : "/yr"}`;
     return `Up to ${fmt(max)}${period === "hourly" ? "/hr" : period === "monthly" ? "/mo" : "/yr"}`;
   }
@@ -156,6 +157,10 @@ export default function JobsPage() {
     if (days < 7) return `${days}d ago`;
     if (days < 30) return `${Math.floor(days / 7)}w ago`;
     return `${Math.floor(days / 30)}mo ago`;
+  }
+
+  function formatRefreshTime(date: Date) {
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   }
 
   if (showSaved) {
@@ -189,6 +194,23 @@ export default function JobsPage() {
               </span>
             )}
           </Button>
+        </div>
+      </div>
+
+      {/* Data source trust banner */}
+      <div className="flex items-start gap-3 rounded-xl border border-blue-200 bg-blue-50 dark:border-blue-900 dark:bg-blue-950/30 px-4 py-3">
+        <Database className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-blue-900 dark:text-blue-200">
+            Live jobs from our verified database
+          </p>
+          <p className="text-xs text-blue-700 dark:text-blue-400 mt-0.5">
+            Jobs are sourced directly from employer postings and updated regularly. AI matching ranks results by your profile fit.
+          </p>
+        </div>
+        <div className="flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 shrink-0">
+          <RefreshCw className="h-3 w-3" />
+          <span>Updated {formatRefreshTime(lastRefreshed)}</span>
         </div>
       </div>
 
@@ -296,36 +318,95 @@ export default function JobsPage() {
         {["recommended", "nearby", "remote", "urgent"].map((tab) => (
           <TabsContent key={tab} value={tab}>
             {loading ? (
-              <div className="flex items-center justify-center py-16">
-                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              /* Skeleton loader */
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <Card key={i}>
+                    <CardContent className="pt-4">
+                      <div className="flex gap-4">
+                        <div className="hidden sm:block h-12 w-12 rounded-lg bg-muted animate-pulse shrink-0" />
+                        <div className="flex-1 space-y-2">
+                          <div className="h-4 w-48 rounded bg-muted animate-pulse" />
+                          <div className="h-3 w-32 rounded bg-muted animate-pulse" />
+                          <div className="flex gap-2 mt-2">
+                            <div className="h-3 w-20 rounded bg-muted animate-pulse" />
+                            <div className="h-3 w-16 rounded bg-muted animate-pulse" />
+                            <div className="h-3 w-24 rounded bg-muted animate-pulse" />
+                          </div>
+                          <div className="h-3 w-full rounded bg-muted animate-pulse" />
+                          <div className="h-3 w-3/4 rounded bg-muted animate-pulse" />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
             ) : filteredJobs.length === 0 ? (
+              /* Honest empty state */
               <Card>
                 <CardContent className="py-16">
-                  <div className="flex flex-col items-center justify-center text-center">
-                    <Briefcase className="h-12 w-12 text-muted-foreground/50 mb-3" />
-                    <h3 className="text-lg font-semibold">No jobs found</h3>
-                    <p className="text-sm text-muted-foreground mt-1 max-w-sm">
+                  <div className="flex flex-col items-center justify-center text-center max-w-sm mx-auto">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-muted mb-4">
+                      <Briefcase className="h-8 w-8 text-muted-foreground/60" />
+                    </div>
+                    <h3 className="text-lg font-semibold">
+                      {hasActiveFilters ? "No matching jobs" : "No jobs available yet"}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-2">
                       {hasActiveFilters
-                        ? "Try adjusting your filters to see more results."
-                        : "No jobs available in this category right now. Check back later."}
+                        ? "Try broadening your filters — fewer criteria usually returns more results."
+                        : tab === "urgent"
+                        ? "No urgent hiring postings right now. Check the Recommended tab for all available jobs."
+                        : tab === "nearby"
+                        ? "No local jobs found for your location. Make sure your profile location is up to date, or browse Remote jobs."
+                        : tab === "remote"
+                        ? "No remote jobs in the database right now. New jobs are added regularly — check back soon."
+                        : "We're actively adding new jobs to the platform. Check back soon, or complete your profile so we can match you better."}
                     </p>
-                    {hasActiveFilters && (
-                      <Button variant="outline" size="sm" className="mt-4" onClick={clearFilters}>
-                        Clear Filters
-                      </Button>
-                    )}
+                    <div className="flex flex-col sm:flex-row gap-2 mt-5">
+                      {hasActiveFilters && (
+                        <Button variant="outline" size="sm" onClick={clearFilters}>
+                          <X className="h-3.5 w-3.5 mr-1.5" />
+                          Clear Filters
+                        </Button>
+                      )}
+                      <Link href="/dashboard/profile">
+                        <Button variant="outline" size="sm">
+                          Update Profile
+                        </Button>
+                      </Link>
+                    </div>
+                    <div className="mt-6 flex items-start gap-2 rounded-lg bg-muted/50 px-3 py-2.5 text-left">
+                      <Info className="h-3.5 w-3.5 text-muted-foreground mt-0.5 shrink-0" />
+                      <p className="text-xs text-muted-foreground">
+                        HireFlow AI pulls jobs directly from our database. A complete profile improves your AI match score significantly.
+                      </p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             ) : (
               <div className="space-y-3">
-                <p className="text-sm text-muted-foreground">
-                  {filteredJobs.length} job{filteredJobs.length !== 1 ? "s" : ""} found
-                </p>
+                {/* Results count + data freshness */}
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-muted-foreground">
+                    <span className="font-medium text-foreground">{filteredJobs.length}</span>{" "}
+                    job{filteredJobs.length !== 1 ? "s" : ""} found
+                    {hasActiveFilters && " (filtered)"}
+                  </p>
+                  <button
+                    onClick={() => loadJobs(activeTab)}
+                    className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <RefreshCw className="h-3 w-3" />
+                    Refresh
+                  </button>
+                </div>
+
                 {filteredJobs.map((job) => {
                   const isSaved = savedJobIds.includes(job.id);
                   const salary = formatSalary(job.salary_min, job.salary_max, job.salary_currency, job.salary_period);
+                  const isNew = (Date.now() - new Date(job.posted_at).getTime()) < 1000 * 60 * 60 * 24 * 2; // < 2 days
 
                   return (
                     <Card key={job.id} className="transition-all hover:shadow-md hover:border-primary/20">
@@ -347,14 +428,19 @@ export default function JobsPage() {
                                   {job.company}
                                 </p>
                               </div>
-                              <div className="flex items-center gap-1.5 shrink-0">
+                              <div className="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
+                                {isNew && (
+                                  <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400 text-[10px]">
+                                    New
+                                  </Badge>
+                                )}
                                 {job.is_urgent && (
-                                  <Badge className="bg-red-100 text-red-700 text-[10px]">
+                                  <Badge className="bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400 text-[10px]">
                                     Urgent
                                   </Badge>
                                 )}
                                 {job.is_remote && (
-                                  <Badge className="bg-green-100 text-green-700 text-[10px]">
+                                  <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400 text-[10px]">
                                     Remote
                                   </Badge>
                                 )}
@@ -411,7 +497,7 @@ export default function JobsPage() {
                             </p>
 
                             {/* Actions */}
-                            <div className="flex items-center gap-2 mt-3">
+                            <div className="flex items-center gap-2 mt-3 flex-wrap">
                               <Button
                                 variant={isSaved ? "secondary" : "outline"}
                                 size="sm"
