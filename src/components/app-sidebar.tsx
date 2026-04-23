@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
+  Target,
   Zap,
   LayoutDashboard,
   User,
@@ -32,6 +33,11 @@ const navItems = [
     title: "Resume Studio",
     href: "/dashboard/resume",
     icon: FileText,
+  },
+  {
+    title: "Tailoring",
+    href: "/dashboard/tailoring",
+    icon: Target,
   },
   {
     title: "Insights",
