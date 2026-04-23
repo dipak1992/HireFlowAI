@@ -172,9 +172,9 @@ export default function JobsPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Job Dashboard</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Find Jobs Near Me</h2>
           <p className="text-muted-foreground mt-1">
-            Discover jobs matched to your skills and experience.
+            Warehouse, logistics, restaurant, retail, delivery, hotel, and local jobs hiring near you.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -298,11 +298,11 @@ export default function JobsPage() {
         <TabsList variant="line" className="mb-4">
           <TabsTrigger value="recommended">
             <Zap className="h-3.5 w-3.5 mr-1.5" />
-            Recommended
+            Best Match
           </TabsTrigger>
           <TabsTrigger value="nearby">
             <MapPin className="h-3.5 w-3.5 mr-1.5" />
-            Nearby
+            Jobs Near Me
           </TabsTrigger>
           <TabsTrigger value="remote">
             <Globe className="h-3.5 w-3.5 mr-1.5" />
@@ -310,7 +310,7 @@ export default function JobsPage() {
           </TabsTrigger>
           <TabsTrigger value="urgent">
             <Clock className="h-3.5 w-3.5 mr-1.5" />
-            Urgent Hiring
+            Hiring Now
           </TabsTrigger>
         </TabsList>
 
@@ -356,12 +356,12 @@ export default function JobsPage() {
                       {hasActiveFilters
                         ? "Try broadening your filters — fewer criteria usually returns more results."
                         : tab === "urgent"
-                        ? "No urgent hiring postings right now. Check the Recommended tab for all available jobs."
+                        ? "No hiring-now postings right now. Check the Best Match tab for all available jobs."
                         : tab === "nearby"
                         ? "No local jobs found for your location. Make sure your profile location is up to date, or browse Remote jobs."
                         : tab === "remote"
                         ? "No remote jobs in the database right now. New jobs are added regularly — check back soon."
-                        : "We're actively adding new jobs to the platform. Check back soon, or complete your profile so we can match you better."}
+                        : "We're actively adding warehouse, restaurant, retail, delivery, and local jobs. Check back soon, or complete your profile so we can match you better."}
                     </p>
                     <div className="flex flex-col sm:flex-row gap-2 mt-5">
                       {hasActiveFilters && (

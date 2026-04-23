@@ -87,7 +87,7 @@ export default async function DashboardPage() {
           className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm shadow-primary/20 hover:bg-primary/90 hover:shadow-md hover:shadow-primary/25 transition-all"
         >
           <Zap className="h-4 w-4" />
-          Find Jobs
+          Find Jobs Near Me
           <ChevronRight className="h-3.5 w-3.5 opacity-70" />
         </Link>
       </div>
@@ -203,7 +203,7 @@ export default async function DashboardPage() {
               Quick Actions
             </h3>
             <div className="space-y-1.5">
-              <QuickActionLink href="/dashboard/jobs" icon={<Briefcase className="h-4 w-4" />} label="Browse Job Matches" color="blue" />
+              <QuickActionLink href="/dashboard/jobs" icon={<Briefcase className="h-4 w-4" />} label="Find Jobs Near Me" color="blue" />
               <QuickActionLink href="/dashboard/resume" icon={<FileText className="h-4 w-4" />} label="Build Resume" color="violet" />
               <QuickActionLink href="/dashboard/tailoring" icon={<Target className="h-4 w-4" />} label="Tailor for a Job" color="emerald" />
               <QuickActionLink href="/dashboard/tracker" icon={<BookOpen className="h-4 w-4" />} label="Track Applications" color="orange" />

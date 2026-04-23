@@ -38,17 +38,28 @@ import {
 const TOTAL_STEPS = 4;
 
 const JOB_CATEGORIES = [
+  // Local / Hourly first (primary audience)
+  "Warehouse & Logistics",
+  "Forklift & Heavy Equipment",
+  "Restaurant & Food Service",
+  "Retail & Cashier",
+  "Delivery & Driver",
+  "Hotel & Hospitality",
+  "Cleaning & Janitorial",
+  "General Labor",
+  "Construction & Trades",
+  "Healthcare & Caregiving",
+  // Professional
+  "Customer Support",
+  "Sales",
+  "Marketing",
+  "Human Resources",
+  "Finance / Accounting",
+  "Operations",
   "Software Engineering",
   "Product Management",
   "Design / UX",
   "Data Science / Analytics",
-  "Marketing",
-  "Sales",
-  "Operations",
-  "Finance / Accounting",
-  "Human Resources",
-  "Customer Support",
-  "Healthcare",
   "Education",
   "Legal",
   "Other",
@@ -133,10 +144,10 @@ export default function OnboardingWizard() {
           <Card className="shadow-lg">
             <CardHeader className="text-center">
               <CardTitle className="text-xl">
-                What&apos;s your primary goal?
+                What type of jobs are you looking for?
               </CardTitle>
               <CardDescription>
-                This helps us tailor your experience and job recommendations.
+                This helps us show you the right jobs and tailor your experience.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -149,8 +160,8 @@ export default function OnboardingWizard() {
                   htmlFor="need_work_fast"
                   className={`flex items-start gap-4 rounded-xl border p-4 cursor-pointer transition-all ${
                     goal === "need_work_fast"
-                      ? "border-primary bg-primary/5"
-                      : "hover:border-primary/30"
+                      ? "border-orange-400 bg-orange-50/60"
+                      : "hover:border-orange-300/60 hover:bg-orange-50/30"
                   }`}
                 >
                   <RadioGroupItem
@@ -160,12 +171,11 @@ export default function OnboardingWizard() {
                   />
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <Rocket className="h-5 w-5 text-primary" />
-                      <span className="font-semibold">Need Work Fast</span>
+                      <MapPin className="h-5 w-5 text-orange-500" />
+                      <span className="font-semibold">Find Jobs Near Me</span>
                     </div>
                     <p className="text-sm text-muted-foreground mt-1">
-                      I need to find a job quickly. Prioritize speed and
-                      available positions.
+                      Local hourly and hiring-now jobs nearby — warehouse, logistics, restaurant, retail, delivery, hotel, and more.
                     </p>
                   </div>
                 </label>
@@ -189,8 +199,7 @@ export default function OnboardingWizard() {
                       <span className="font-semibold">Grow My Career</span>
                     </div>
                     <p className="text-sm text-muted-foreground mt-1">
-                      I want to find the right role for long-term career growth
-                      and development.
+                      Professional, remote, skilled, and higher-growth roles for long-term career development.
                     </p>
                   </div>
                 </label>
@@ -350,10 +359,10 @@ export default function OnboardingWizard() {
                 <Briefcase className="h-8 w-8 text-primary" />
               </div>
               <CardTitle className="text-xl">
-                What type of work are you looking for?
+                What type of jobs are you looking for?
               </CardTitle>
               <CardDescription>
-                Select the job category that best fits your skills.
+                Select the category that best fits your skills and experience.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">

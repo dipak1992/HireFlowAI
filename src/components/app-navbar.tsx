@@ -41,7 +41,7 @@ import { useState } from "react";
 
 const allNavItems = [
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { title: "Jobs", href: "/dashboard/jobs", icon: Briefcase },
+  { title: "Find Jobs", href: "/dashboard/jobs", icon: Briefcase },
   { title: "Resume Studio", href: "/dashboard/resume", icon: FileText },
   { title: "Tailoring", href: "/dashboard/tailoring", icon: Target },
   { title: "Tracker", href: "/dashboard/tracker", icon: ClipboardList },
@@ -58,7 +58,7 @@ const accountItems = [
 // Page title map for breadcrumb
 const pageTitles: Record<string, string> = {
   "/dashboard": "Dashboard",
-  "/dashboard/jobs": "Jobs",
+  "/dashboard/jobs": "Find Jobs",
   "/dashboard/resume": "Resume Studio",
   "/dashboard/tailoring": "Tailoring",
   "/dashboard/tracker": "Tracker",

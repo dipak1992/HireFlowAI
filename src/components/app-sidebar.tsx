@@ -25,7 +25,7 @@ import { signOut } from "@/lib/auth-actions";
 
 const navItems = [
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { title: "Jobs", href: "/dashboard/jobs", icon: Briefcase },
+  { title: "Find Jobs", href: "/dashboard/jobs", icon: Briefcase },
   { title: "Resume Studio", href: "/dashboard/resume", icon: FileText },
   { title: "Tailoring", href: "/dashboard/tailoring", icon: Target },
   { title: "Tracker", href: "/dashboard/tracker", icon: ClipboardList },

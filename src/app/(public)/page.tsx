@@ -43,7 +43,7 @@ export default function LandingPage() {
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.08]">
-                Need Work Fast.{" "}
+                Find Jobs Near Me.{" "}
                 <span className="gradient-text">Grow Your Career</span>{" "}
                 Faster.
               </h1>
@@ -117,32 +117,32 @@ export default function LandingPage() {
           <div className="text-center max-w-2xl mx-auto mb-14">
             <div className="badge-pill-primary inline-flex mb-4">Two paths, one platform</div>
             <h2 className="text-3xl md:text-4xl font-bold">
-              Whether you need work fast or want to grow
+              Find local jobs near you or grow your career
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              HireFlow AI adapts to your situation — urgent job search or strategic career growth.
+              HireFlow AI adapts to your situation — find jobs hiring now nearby or build toward your next big role.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            {/* Need Work Fast */}
+            {/* Find Jobs Near Me */}
             <div className="feature-card border-orange-200/60 bg-gradient-to-br from-orange-50/50 to-card">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100 text-orange-600 mb-6">
                 <Zap className="h-6 w-6" />
               </div>
               <div className="inline-flex items-center gap-1.5 rounded-full bg-orange-100 text-orange-700 px-2.5 py-0.5 text-xs font-semibold mb-3">
-                Fast Track
+                Hiring Now Nearby
               </div>
-              <h3 className="text-xl font-bold mb-2">Need Work Fast</h3>
+              <h3 className="text-xl font-bold mb-2">Find Jobs Near Me</h3>
               <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
-                Urgently looking for a job? We prioritize speed — fast matching, quick applications, and immediate results for warehouse, retail, healthcare, and more.
+                Warehouse, logistics, restaurant, retail, delivery, hotel, and local jobs hiring near you. See what&apos;s available today and apply fast.
               </p>
               <ul className="space-y-2.5 mb-8">
                 {[
-                  "Instant job matching based on your skills",
-                  "One-click apply with tailored resume",
-                  "Warehouse, retail, healthcare & more",
-                  "Nearby jobs based on your location",
+                  "Warehouse, logistics & forklift jobs near you",
+                  "Restaurant, retail & hotel jobs hiring now",
+                  "Delivery, cleaning & general labor roles",
+                  "Weekly pay and shift jobs available",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2 text-sm">
                     <CheckCircle2 className="h-4 w-4 text-orange-500 mt-0.5 shrink-0" />
@@ -154,7 +154,7 @@ export default function LandingPage() {
                 href="/signup"
                 className={cn(buttonVariants({ variant: "outline", size: "sm" }), "border-orange-200 text-orange-700 hover:bg-orange-50")}
               >
-                Start Fast Track <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                Find Jobs Now <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
               </Link>
             </div>
 
@@ -342,7 +342,7 @@ export default function LandingPage() {
               { q: "How does AI job matching work?", a: "Our AI analyzes your skills, experience, and career goals from your profile. It then scores and ranks open positions based on how well they match, surfacing the most relevant opportunities first." },
               { q: "Will the AI fabricate experience on my resume?", a: "Never. Our AI only reorganizes and highlights your real experience. It rewrites bullet points to better match job descriptions, but never invents skills or experience you don't have." },
               { q: "Can I import my LinkedIn profile?", a: "Yes. Connect your LinkedIn account during onboarding and we'll automatically import your work history, education, and skills to build your profile." },
-              { q: "What's the difference between Pro and FastHire?", a: "Pro is designed for strategic career growth with 25 tailorings/month and career insights. FastHire is optimized for speed with 50 tailorings/month — ideal if you need work quickly." },
+              { q: "What's the difference between Pro and FastHire?", a: "Pro is designed for strategic career growth with 25 tailorings/month and career insights. FastHire is optimized for speed with 50 tailorings/month — ideal for warehouse, retail, restaurant, and local job seekers who need to find work fast." },
               { q: "Can I cancel anytime?", a: "Absolutely. No contracts, no hidden fees. Cancel your subscription anytime from your billing dashboard and you'll keep access until the end of your billing period." },
             ].map((faq, i) => (
               <details key={i} className="group premium-card">
