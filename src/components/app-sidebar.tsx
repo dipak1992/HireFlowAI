@@ -29,7 +29,7 @@ const navItems = [
     icon: Briefcase,
   },
   {
-    title: "Resume",
+    title: "Resume Studio",
     href: "/dashboard/resume",
     icon: FileText,
   },
