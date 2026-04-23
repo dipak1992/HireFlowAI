@@ -3,18 +3,12 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { signOut } from "@/lib/auth-actions";
 import { GoogleIcon, LinkedInIcon } from "@/components/icons";
-import { Loader2, Mail, Shield, Bell, Trash2 } from "lucide-react";
+import { Mail, Shield, Bell, Trash2, LogOut, CheckCircle2 } from "lucide-react";
+import { PageHeader, Section, LoadingState } from "@/components/ui/primitives";
 
 export default function SettingsPage() {
   const supabase = createClient();
@@ -39,50 +33,56 @@ export default function SettingsPage() {
   }, [supabase]);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
-    );
+    return <LoadingState text="Loading settings…" />;
   }
+
+  const providerLabel =
+    provider === "linkedin_oidc" ? "LinkedIn" : provider === "google" ? "Google" : "Magic Link";
 
   return (
     <div className="max-w-2xl space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
-        <p className="text-muted-foreground mt-1">
-          Manage your account settings and preferences.
-        </p>
-      </div>
+      <PageHeader
+        title="Settings"
+        description="Manage your account settings and preferences."
+      />
 
       {/* Account */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
-            <Shield className="h-4 w-4" />
-            Account
-          </CardTitle>
-          <CardDescription>
-            Your account information and login method.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium">Email</p>
-              <p className="text-sm text-muted-foreground">{email}</p>
+      <Section
+        title="Account"
+        description="Your account information and login method."
+      >
+        <div className="space-y-4">
+          {/* Email row */}
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted shrink-0">
+                <Mail className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-medium">Email</p>
+                <p className="text-sm text-muted-foreground truncate">{email}</p>
+              </div>
             </div>
-            <Badge variant="secondary">Verified</Badge>
+            <Badge variant="secondary" className="shrink-0 text-emerald-700 bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-400">
+              <CheckCircle2 className="h-3 w-3 mr-1" />
+              Verified
+            </Badge>
           </div>
-          <Separator />
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium">Login Method</p>
-              <p className="text-sm text-muted-foreground capitalize">
-                {provider === "linkedin_oidc" ? "LinkedIn" : provider}
-              </p>
+
+          <Separator className="opacity-50" />
+
+          {/* Login method row */}
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted shrink-0">
+                <Shield className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div>
+                <p className="text-sm font-medium">Login Method</p>
+                <p className="text-sm text-muted-foreground">{providerLabel}</p>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="shrink-0">
               {provider === "google" && (
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
                   <GoogleIcon className="h-4 w-4" />
@@ -100,54 +100,43 @@ export default function SettingsPage() {
               )}
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </Section>
 
       {/* Notifications */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
-            <Bell className="h-4 w-4" />
-            Notifications
-          </CardTitle>
-          <CardDescription>
-            Configure how you receive notifications.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <Section
+        title="Notifications"
+        description="Configure how you receive notifications."
+      >
+        <div className="space-y-4">
           <NotificationSetting
             title="Job Matches"
             description="Get notified when new jobs match your preferences"
             defaultChecked={true}
           />
-          <Separator />
+          <Separator className="opacity-50" />
           <NotificationSetting
             title="Application Updates"
             description="Receive updates on your job applications"
             defaultChecked={true}
           />
-          <Separator />
+          <Separator className="opacity-50" />
           <NotificationSetting
             title="Career Tips"
             description="Weekly career insights and tips"
             defaultChecked={false}
           />
-        </CardContent>
-      </Card>
+        </div>
+      </Section>
 
       {/* Danger Zone */}
-      <Card className="border-destructive/50">
-        <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2 text-destructive">
-            <Trash2 className="h-4 w-4" />
-            Danger Zone
-          </CardTitle>
-          <CardDescription>
-            Irreversible actions for your account.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
+      <Section className="border-destructive/40">
+        <div className="flex items-center gap-2 mb-4">
+          <Trash2 className="h-4 w-4 text-destructive" />
+          <h3 className="font-semibold text-base text-destructive">Danger Zone</h3>
+        </div>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-sm font-medium">Sign out</p>
               <p className="text-sm text-muted-foreground">
@@ -155,25 +144,28 @@ export default function SettingsPage() {
               </p>
             </div>
             <form action={signOut}>
-              <Button type="submit" variant="outline" size="sm">
+              <Button type="submit" variant="outline" size="sm" className="shrink-0">
+                <LogOut className="h-3.5 w-3.5 mr-1.5" />
                 Sign Out
               </Button>
             </form>
           </div>
-          <Separator />
-          <div className="flex items-center justify-between">
+
+          <Separator className="opacity-50" />
+
+          <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-sm font-medium">Delete account</p>
               <p className="text-sm text-muted-foreground">
-                Permanently delete your account and all data.
+                Permanently delete your account and all data. This cannot be undone.
               </p>
             </div>
-            <Button variant="destructive" size="sm" disabled>
+            <Button variant="destructive" size="sm" disabled className="shrink-0">
               Delete Account
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </Section>
     </div>
   );
 }
@@ -190,8 +182,8 @@ function NotificationSetting({
   const [checked, setChecked] = useState(defaultChecked);
 
   return (
-    <div className="flex items-center justify-between">
-      <div>
+    <div className="flex items-center justify-between gap-4">
+      <div className="min-w-0">
         <p className="text-sm font-medium">{title}</p>
         <p className="text-sm text-muted-foreground">{description}</p>
       </div>

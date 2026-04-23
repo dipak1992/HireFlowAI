@@ -6,16 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { Loader2, Save, CheckCircle2 } from "lucide-react";
+import { Loader2, Save, CheckCircle2, User, Mail, Phone, MapPin, FileText } from "lucide-react";
+import { PageHeader, Section, LoadingState } from "@/components/ui/primitives";
 import type { Profile } from "@/lib/types";
 
 export default function ProfilePage() {
@@ -87,11 +81,7 @@ export default function ProfilePage() {
   }
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
-    );
+    return <LoadingState text="Loading profile…" />;
   }
 
   const initials = fullName
@@ -105,55 +95,51 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-2xl space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">Profile</h2>
-        <p className="text-muted-foreground mt-1">
-          Manage your personal information and public profile.
-        </p>
-      </div>
+      <PageHeader
+        title="Profile"
+        description="Manage your personal information and public profile."
+      />
 
-      {/* Avatar Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Photo</CardTitle>
-          <CardDescription>
-            Your profile photo from your login provider.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center gap-4">
-            <Avatar className="h-20 w-20">
-              <AvatarImage
-                src={profile?.avatar_url || ""}
-                alt={fullName}
-              />
-              <AvatarFallback className="bg-primary/10 text-primary text-xl font-medium">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="text-sm font-medium">{fullName || "Your Name"}</p>
-              <p className="text-sm text-muted-foreground">
+      {/* Avatar / Identity Card */}
+      <Section title="Your Identity">
+        <div className="flex items-center gap-5">
+          <Avatar className="h-20 w-20 shrink-0 ring-2 ring-border">
+            <AvatarImage src={profile?.avatar_url || ""} alt={fullName} />
+            <AvatarFallback className="bg-primary/10 text-primary text-xl font-semibold">
+              {initials}
+            </AvatarFallback>
+          </Avatar>
+          <div className="min-w-0">
+            <p className="text-base font-semibold truncate">
+              {fullName || "Your Name"}
+            </p>
+            {headline && (
+              <p className="text-sm text-muted-foreground truncate mt-0.5">
+                {headline}
+              </p>
+            )}
+            <div className="flex items-center gap-1.5 mt-1.5">
+              <Mail className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+              <p className="text-sm text-muted-foreground truncate">
                 {profile?.email}
               </p>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </Section>
 
-      {/* Profile Form */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Personal Information</CardTitle>
-          <CardDescription>
-            Update your profile details. This information helps us match you
-            with better opportunities.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      {/* Personal Information Form */}
+      <Section
+        title="Personal Information"
+        description="This information helps us match you with better opportunities."
+      >
+        <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
+              <Label htmlFor="fullName" className="flex items-center gap-1.5 text-xs font-medium">
+                <User className="h-3.5 w-3.5 text-muted-foreground" />
+                Full Name
+              </Label>
               <Input
                 id="fullName"
                 value={fullName}
@@ -162,19 +148,25 @@ export default function ProfilePage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="headline">Headline</Label>
+              <Label htmlFor="headline" className="flex items-center gap-1.5 text-xs font-medium">
+                <FileText className="h-3.5 w-3.5 text-muted-foreground" />
+                Headline
+              </Label>
               <Input
                 id="headline"
                 value={headline}
                 onChange={(e) => setHeadline(e.target.value)}
-                placeholder="Software Engineer at..."
+                placeholder="Software Engineer at Acme"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone</Label>
+              <Label htmlFor="phone" className="flex items-center gap-1.5 text-xs font-medium">
+                <Phone className="h-3.5 w-3.5 text-muted-foreground" />
+                Phone
+              </Label>
               <Input
                 id="phone"
                 type="tel"
@@ -184,7 +176,10 @@ export default function ProfilePage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
+              <Label htmlFor="location" className="flex items-center gap-1.5 text-xs font-medium">
+                <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
+                Location
+              </Label>
               <Input
                 id="location"
                 value={location}
@@ -195,32 +190,49 @@ export default function ProfilePage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="bio">Bio</Label>
+            <Label htmlFor="bio" className="text-xs font-medium">Bio</Label>
             <Textarea
               id="bio"
               value={bio}
               onChange={(e) => setBio(e.target.value)}
-              placeholder="Tell us about yourself, your experience, and what you're looking for..."
+              placeholder="Tell us about yourself, your experience, and what you're looking for…"
               rows={4}
+              className="resize-none"
             />
+            <p className="text-xs text-muted-foreground">
+              {bio.length}/500 characters
+            </p>
           </div>
 
-          <Separator />
+          <Separator className="opacity-50" />
 
           <div className="flex items-center gap-3">
-            <Button onClick={handleSave} disabled={saving}>
+            <Button onClick={handleSave} disabled={saving} className="min-w-[120px]">
               {saving ? (
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Saving…
+                </>
               ) : saved ? (
-                <CheckCircle2 className="h-4 w-4 mr-2" />
+                <>
+                  <CheckCircle2 className="h-4 w-4 mr-2 text-emerald-500" />
+                  Saved!
+                </>
               ) : (
-                <Save className="h-4 w-4 mr-2" />
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  Save Changes
+                </>
               )}
-              {saved ? "Saved!" : "Save Changes"}
             </Button>
+            {saved && (
+              <p className="text-sm text-emerald-600 font-medium animate-fade-in-up">
+                Profile updated successfully.
+              </p>
+            )}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </Section>
     </div>
   );
 }

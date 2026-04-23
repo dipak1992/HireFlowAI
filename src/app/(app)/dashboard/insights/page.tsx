@@ -1,42 +1,77 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, BarChart2, Target, Lightbulb, Sparkles, ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+import { PageHeader, Section, EmptyState, FeatureCard } from "@/components/ui/primitives";
 
 export default function InsightsPage() {
-  return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">Career Insights</h2>
-        <p className="text-muted-foreground mt-1">
-          Personalized career recommendations and market insights.
-        </p>
-      </div>
+  const comingSoonFeatures = [
+    {
+      icon: <BarChart2 className="h-5 w-5" />,
+      title: "Application Funnel",
+      description: "Track your conversion rate from application to offer across all stages.",
+      color: "blue" as const,
+    },
+    {
+      icon: <Target className="h-5 w-5" />,
+      title: "Job Match Score Trends",
+      description: "See how your profile match score improves over time as you optimize.",
+      color: "violet" as const,
+    },
+    {
+      icon: <TrendingUp className="h-5 w-5" />,
+      title: "Salary Benchmarks",
+      description: "Compare your target salary against real market data for your role and location.",
+      color: "emerald" as const,
+    },
+    {
+      icon: <Lightbulb className="h-5 w-5" />,
+      title: "Skill Gap Analysis",
+      description: "Discover which skills are most in-demand for your target roles.",
+      color: "orange" as const,
+    },
+  ];
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Your Insights</CardTitle>
-          <CardDescription>
-            AI-powered career recommendations
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mb-4">
-              <TrendingUp className="h-8 w-8 text-primary" />
-            </div>
-            <h3 className="text-lg font-semibold">Insights coming soon</h3>
-            <p className="text-sm text-muted-foreground mt-2 max-w-sm">
-              We&apos;re analyzing market trends and your profile to generate
-              personalized career insights. Coming soon in Phase 2.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+  return (
+    <div className="space-y-8 max-w-4xl">
+      <PageHeader
+        title="Career Insights"
+        description="AI-powered analytics and recommendations for your job search."
+      />
+
+      {/* Coming Soon Hero */}
+      <Section>
+        <EmptyState
+          icon={<Sparkles className="h-6 w-6 text-primary" />}
+          title="Insights are on the way"
+          description="We're building powerful analytics to help you understand your job search performance and make smarter career decisions."
+          action={
+            <Link
+              href="/dashboard/jobs"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+            >
+              Browse Jobs in the meantime
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </Link>
+          }
+        />
+      </Section>
+
+      {/* Preview of upcoming features */}
+      <div>
+        <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+          Coming Soon
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {comingSoonFeatures.map((feature) => (
+            <FeatureCard
+              key={feature.title}
+              icon={feature.icon}
+              title={feature.title}
+              description={feature.description}
+              color={feature.color}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
