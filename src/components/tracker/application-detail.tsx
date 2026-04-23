@@ -36,7 +36,10 @@ import {
   XCircle,
   AlertCircle,
   RefreshCw,
+  Lock,
 } from "lucide-react";
+import { checkFeatureAccess } from "@/lib/stripe-actions";
+import UpgradeModal from "@/components/billing/upgrade-modal";
 import {
   type Application,
   type ApplicationNote,
@@ -119,6 +122,7 @@ export default function ApplicationDetail({
   const [activeTab, setActiveTab] = useState<"overview" | "notes" | "interviews" | "ai_prep">("overview");
   const [newNote, setNewNote] = useState("");
   const [noteType, setNoteType] = useState<NoteType>("general");
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showAddInterview, setShowAddInterview] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [aiData, setAiData] = useState<{
@@ -206,6 +210,12 @@ export default function ApplicationDetail({
 
   const handleGeneratePrep = () => {
     startTransition(async () => {
+      // Check AI prep access (Pro plan required)
+      const access = await checkFeatureAccess("ai_prep");
+      if (!access.allowed) {
+        setShowUpgradeModal(true);
+        return;
+      }
       const result = await generateAIPrep(app.id);
       if (result && "questions" in result) {
         setAiData({
@@ -226,6 +236,15 @@ export default function ApplicationDetail({
   ];
 
   return (
+    <>
+    {showUpgradeModal && (
+      <UpgradeModal
+        feature="ai_prep"
+        reason="AI Interview Prep is a Pro feature. Upgrade to get personalized questions, salary tips, and career insights."
+        upgradeRequired="pro"
+        onClose={() => setShowUpgradeModal(false)}
+      />
+    )}
     <div className="fixed inset-0 z-50 flex">
       <div className="flex-1 bg-black/40 backdrop-blur-sm" onClick={onClose} />
       <div className="w-full max-w-2xl bg-background border-l shadow-2xl flex flex-col overflow-hidden">
@@ -784,5 +803,6 @@ export default function ApplicationDetail({
         </div>
       </div>
     </div>
+    </>
   );
 }

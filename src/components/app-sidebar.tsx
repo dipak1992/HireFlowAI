@@ -14,6 +14,7 @@ import {
   FileText,
   TrendingUp,
   ClipboardList,
+  CreditCard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -49,6 +50,11 @@ const navItems = [
     title: "Insights",
     href: "/dashboard/insights",
     icon: TrendingUp,
+  },
+  {
+    title: "Billing",
+    href: "/dashboard/billing",
+    icon: CreditCard,
   },
 ];
 

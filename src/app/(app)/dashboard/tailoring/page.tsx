@@ -25,6 +25,8 @@ import {
   Trash2,
   ArrowRight,
   CheckCircle2,
+  AlertCircle,
+  Zap,
 } from "lucide-react";
 import {
   createTailoringSession,
@@ -32,8 +34,16 @@ import {
   deleteTailoringSession,
   getUserResumes,
 } from "@/lib/tailoring-actions";
+import {
+  checkFeatureAccess,
+  trackUsage,
+  getMonthlyUsage,
+  getCurrentPlan,
+} from "@/lib/stripe-actions";
+import { PLANS } from "@/lib/stripe-config";
 import type { TailoringSession } from "@/lib/tailoring-types";
 import TailoringResults from "@/components/tailoring/tailoring-results";
+import UpgradeModal from "@/components/billing/upgrade-modal";
 
 export default function TailoringPage() {
   const [resumes, setResumes] = useState<{ id: string; title: string; template: string; contact_name: string; updated_at: string }[]>([]);
@@ -50,18 +60,27 @@ export default function TailoringPage() {
   const [activeSession, setActiveSession] = useState<TailoringSession | null>(null);
   const [showForm, setShowForm] = useState(false);
 
+  // Usage / billing state
+  const [usedThisMonth, setUsedThisMonth] = useState(0);
+  const [planId, setPlanId] = useState<"free" | "pro" | "fasthire">("free");
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
   useEffect(() => {
     loadData();
   }, []);
 
   async function loadData() {
     setLoading(true);
-    const [resumeData, sessionData] = await Promise.all([
+    const [resumeData, sessionData, used, plan] = await Promise.all([
       getUserResumes(),
       getTailoringSessions(),
+      getMonthlyUsage("tailoring"),
+      getCurrentPlan(),
     ]);
     setResumes(resumeData as typeof resumes);
     setSessions(sessionData as TailoringSession[]);
+    setUsedThisMonth(used);
+    setPlanId(plan);
     if (resumeData.length > 0 && !selectedResumeId) {
       setSelectedResumeId(resumeData[0].id);
     }
@@ -70,6 +89,14 @@ export default function TailoringPage() {
 
   async function handleAnalyze() {
     if (!selectedResumeId || !jobDescription.trim()) return;
+
+    // Check usage limit before running
+    const access = await checkFeatureAccess("tailoring");
+    if (!access.allowed) {
+      setShowUpgradeModal(true);
+      return;
+    }
+
     setIsAnalyzing(true);
 
     const result = await createTailoringSession(
@@ -81,6 +108,10 @@ export default function TailoringPage() {
     );
 
     if (result?.success && result.sessionId) {
+      // Track usage
+      await trackUsage("tailoring");
+      setUsedThisMonth((prev) => prev + 1);
+
       // Reload sessions and show results
       const sessionData = await getTailoringSessions();
       setSessions(sessionData as TailoringSession[]);
@@ -132,8 +163,21 @@ export default function TailoringPage() {
     );
   }
 
+  const tailoringLimit = PLANS[planId].limits.tailoring_per_month;
+  const isAtLimit = tailoringLimit !== null && usedThisMonth >= tailoringLimit;
+
   return (
     <div className="space-y-6">
+      {/* Upgrade modal */}
+      {showUpgradeModal && (
+        <UpgradeModal
+          feature="tailoring"
+          reason={`You've used all ${tailoringLimit} tailoring sessions this month. Upgrade to Pro for unlimited access.`}
+          upgradeRequired="pro"
+          onClose={() => setShowUpgradeModal(false)}
+        />
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -142,11 +186,33 @@ export default function TailoringPage() {
             Compare your resume against job descriptions and optimize for ATS.
           </p>
         </div>
-        <Button onClick={() => setShowForm(!showForm)}>
+        <Button onClick={() => setShowForm(!showForm)} disabled={isAtLimit}>
           <Plus className="h-4 w-4 mr-1.5" />
           New Analysis
         </Button>
       </div>
+
+      {/* Usage banner */}
+      {tailoringLimit !== null && (
+        <div className={`flex items-center justify-between rounded-xl border px-4 py-3 ${isAtLimit ? "bg-red-50 border-red-200 dark:bg-red-950/30" : "bg-muted/40"}`}>
+          <div className="flex items-center gap-2">
+            {isAtLimit
+              ? <AlertCircle className="h-4 w-4 text-red-600 shrink-0" />
+              : <Zap className="h-4 w-4 text-primary shrink-0" />}
+            <span className="text-sm">
+              {isAtLimit
+                ? `You've used all ${tailoringLimit} tailoring sessions this month.`
+                : `${usedThisMonth} / ${tailoringLimit} tailoring sessions used this month`}
+            </span>
+          </div>
+          {isAtLimit && (
+            <Button size="sm" onClick={() => setShowUpgradeModal(true)}>
+              <Sparkles className="h-3.5 w-3.5 mr-1.5" />
+              Upgrade to Pro
+            </Button>
+          )}
+        </div>
+      )}
 
       {/* New Analysis Form */}
       {showForm && (
