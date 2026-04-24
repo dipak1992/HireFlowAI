@@ -6,12 +6,22 @@ export async function GET(request: Request) {
   const code = searchParams.get("code");
   const next = searchParams.get("next") ?? "/dashboard";
 
+  // Determine the correct base URL for redirects.
+  // On Vercel/production, x-forwarded-host is the public domain.
+  // On local dev, origin is correct.
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const isLocalEnv = process.env.NODE_ENV === "development";
+  const baseUrl = isLocalEnv
+    ? origin
+    : forwardedHost
+    ? `https://${forwardedHost}`
+    : origin;
+
   if (code) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
-      // Check if user logged in with LinkedIn
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -19,51 +29,34 @@ export async function GET(request: Request) {
       if (user) {
         const provider = user.app_metadata?.provider;
 
-        // Check if profile has completed onboarding
+        // LinkedIn OIDC — redirect to consent page
+        if (provider === "linkedin_oidc") {
+          return NextResponse.redirect(`${baseUrl}/auth/linkedin-consent`);
+        }
+
+        // Check if onboarding is completed
         const { data: profile } = await supabase
           .from("profiles")
           .select("onboarding_completed")
           .eq("id", user.id)
           .single();
 
-        if (provider === "linkedin_oidc") {
-          // Redirect to LinkedIn consent page
-          const forwardedHost = request.headers.get("x-forwarded-host");
-          const isLocalEnv = process.env.NODE_ENV === "development";
-
-          if (isLocalEnv) {
-            return NextResponse.redirect(
-              `${origin}/auth/linkedin-consent`
-            );
-          } else if (forwardedHost) {
-            return NextResponse.redirect(
-              `https://${forwardedHost}/auth/linkedin-consent`
-            );
-          }
-          return NextResponse.redirect(
-            `${origin}/auth/linkedin-consent`
-          );
-        }
-
-        // If onboarding not completed, redirect to onboarding
         if (!profile?.onboarding_completed) {
-          return NextResponse.redirect(`${origin}/onboarding`);
+          return NextResponse.redirect(`${baseUrl}/onboarding`);
         }
       }
 
-      const forwardedHost = request.headers.get("x-forwarded-host");
-      const isLocalEnv = process.env.NODE_ENV === "development";
-
-      if (isLocalEnv) {
-        return NextResponse.redirect(`${origin}${next}`);
-      } else if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`);
-      } else {
-        return NextResponse.redirect(`${origin}${next}`);
-      }
+      // Successful auth — redirect to intended destination
+      return NextResponse.redirect(`${baseUrl}${next}`);
     }
+
+    // Code exchange failed — redirect to login with error
+    console.error("Auth callback: code exchange failed");
+    return NextResponse.redirect(
+      `${baseUrl}/login?error=auth_callback_error`
+    );
   }
 
-  // Return the user to an error page with instructions
-  return NextResponse.redirect(`${origin}/login?error=auth_callback_error`);
+  // No code param — redirect to login with error
+  return NextResponse.redirect(`${baseUrl}/login?error=auth_callback_error`);
 }
