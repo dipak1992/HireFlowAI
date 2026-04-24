@@ -1,5 +1,7 @@
 -- Phase 5: Application Tracker
--- Run this after phase4-jobs-schema.sql
+-- Standalone: can be run without phase2/phase3/phase4 schemas.
+-- job_id, resume_id, tailoring_session_id are stored as plain UUIDs
+-- (no FK constraints) so this file runs independently.
 
 -- Applications table (core tracker)
 CREATE TABLE IF NOT EXISTS applications (
@@ -7,7 +9,7 @@ CREATE TABLE IF NOT EXISTS applications (
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   
   -- Job info (can be linked to jobs table or manual entry)
-  job_id UUID REFERENCES jobs(id) ON DELETE SET NULL,
+  job_id UUID,  -- references jobs(id) when phase4 schema is present
   job_title TEXT NOT NULL DEFAULT '',
   company TEXT NOT NULL DEFAULT '',
   company_website TEXT DEFAULT '',
@@ -30,8 +32,8 @@ CREATE TABLE IF NOT EXISTS applications (
   deadline_at TIMESTAMPTZ,
   
   -- Resume used
-  resume_id UUID REFERENCES resumes(id) ON DELETE SET NULL,
-  tailoring_session_id UUID REFERENCES tailoring_sessions(id) ON DELETE SET NULL,
+  resume_id UUID,               -- references resumes(id) when phase2/3 schema is present
+  tailoring_session_id UUID,    -- references tailoring_sessions(id) when phase3 schema is present
   
   -- AI prep data
   ai_prep_generated BOOLEAN DEFAULT FALSE,
