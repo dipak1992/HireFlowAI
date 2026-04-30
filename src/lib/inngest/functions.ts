@@ -3,7 +3,7 @@
 
 import { inngest } from "@/lib/inngest/client";
 import { analyzeResumeVsJob } from "@/lib/tailoring-engine";
-import { generateInterviewQuestions } from "@/lib/interview-prep-engine";
+import { generateInterviewPrep } from "@/lib/interview-prep-engine";
 import { getCachedTailoring, cacheTailoringResult, cleanupExpiredCache } from "@/lib/ai-cache";
 import { sendWinBackEmail } from "@/lib/email-churn";
 import { sendUpgradeConfirmation } from "@/lib/email";
@@ -119,14 +119,15 @@ export const generateInterviewPrepJob = inngest.createFunction(
 
     if (!application) throw new Error("Application not found");
 
-    // Step 2: Generate questions using the interview prep engine
-    const questions = await step.run("generate-questions", async () => {
-      return generateInterviewQuestions({
+    // Step 2: Generate prep using the interview prep engine
+    const prep = await step.run("generate-questions", async () => {
+      const { result } = await generateInterviewPrep({
         jobTitle: application.job_title ?? "",
         company: application.company ?? "",
         jobDescription: application.job_description ?? "",
         resumeSummary: application.resumes?.content?.summary ?? "",
       });
+      return result;
     });
 
     // Step 3: Save prep session
@@ -135,12 +136,12 @@ export const generateInterviewPrepJob = inngest.createFunction(
       await client.from("interview_prep_sessions").insert({
         user_id: userId,
         application_id: applicationId,
-        questions,
+        questions: prep?.questions ?? [],
         created_at: new Date().toISOString(),
       });
     });
 
-    return { success: true, question_count: questions.length };
+    return { success: true, question_count: prep?.questions?.length ?? 0 };
   }
 );
 
