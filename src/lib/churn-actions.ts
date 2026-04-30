@@ -180,9 +180,9 @@ export async function offerChurnDiscount(): Promise<{
       name: "Loyalty Discount — 50% off for 2 months",
     });
 
-    // Apply coupon to subscription
+    // Apply coupon to subscription (Stripe v22: use discounts array)
     await stripe.subscriptions.update(sub.stripe_subscription_id, {
-      coupon: coupon.id,
+      discounts: [{ coupon: coupon.id }],
     });
 
     return { success: true, discountApplied: true };
