@@ -14,10 +14,10 @@ export interface DashboardStats {
 export interface RecentApplication {
   id: string;
   company: string;
-  position: string;
+  job_title: string;
   status: string;
-  applied_at: string;
-  logo_url: string | null;
+  applied_at: string | null;
+  updated_at: string;
 }
 
 export interface OnboardingStatus {
@@ -101,12 +101,12 @@ export async function getRecentApplicationsAction(): Promise<RecentApplication[]
 
   const { data } = await supabase
     .from("applications")
-    .select("id, company, position, status, applied_at, logo_url")
+    .select("id, company, job_title, status, applied_at, updated_at")
     .eq("user_id", user.id)
-    .order("applied_at", { ascending: false })
+    .order("updated_at", { ascending: false })
     .limit(5);
 
-  return data ?? [];
+  return (data ?? []) as RecentApplication[];
 }
 
 export async function getOnboardingStatusAction(): Promise<OnboardingStatus> {

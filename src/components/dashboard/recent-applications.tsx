@@ -17,7 +17,8 @@ const statusColors: Record<string, string> = {
     "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400",
 };
 
-function timeAgo(dateStr: string): string {
+function timeAgo(dateStr: string | null): string {
+  if (!dateStr) return "—";
   const diff = Date.now() - new Date(dateStr).getTime();
   const days = Math.floor(diff / 86400000);
   if (days === 0) return "Today";
@@ -70,22 +71,13 @@ export function RecentApplications({
               href="/dashboard/tracker"
               className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted/40 transition-colors group"
             >
-              {/* Company logo / fallback */}
+              {/* Company logo fallback */}
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted border overflow-hidden">
-                {app.logo_url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={app.logo_url}
-                    alt={app.company}
-                    className="h-full w-full object-contain"
-                  />
-                ) : (
-                  <Building2 className="h-4 w-4 text-muted-foreground/60" />
-                )}
+                <Building2 className="h-4 w-4 text-muted-foreground/60" />
               </div>
 
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{app.position}</p>
+                <p className="text-sm font-medium truncate">{app.job_title}</p>
                 <p className="text-xs text-muted-foreground truncate">
                   {app.company}
                 </p>
@@ -100,7 +92,7 @@ export function RecentApplications({
                   {app.status}
                 </span>
                 <span className="text-[10px] text-muted-foreground">
-                  {timeAgo(app.applied_at)}
+                  {timeAgo(app.applied_at ?? app.updated_at)}
                 </span>
               </div>
             </Link>
