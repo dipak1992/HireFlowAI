@@ -40,7 +40,7 @@ import {
   getMonthlyUsage,
   getCurrentPlan,
 } from "@/lib/stripe-actions";
-import { PLANS } from "@/lib/stripe-config";
+import { getFeatureLimit } from "@/lib/stripe-config";
 import type { TailoringSession } from "@/lib/tailoring-types";
 import TailoringResults from "@/components/tailoring/tailoring-results";
 import UpgradeModal from "@/components/billing/upgrade-modal";
@@ -62,7 +62,7 @@ export default function TailoringPage() {
 
   // Usage / billing state
   const [usedThisMonth, setUsedThisMonth] = useState(0);
-  const [planId, setPlanId] = useState<"free" | "pro" | "fasthire">("free");
+  const [planId, setPlanId] = useState<"free" | "pro">("free");
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   useEffect(() => {
@@ -163,7 +163,8 @@ export default function TailoringPage() {
     );
   }
 
-  const tailoringLimit = PLANS[planId].limits.tailoring_per_month;
+  const tailoringLimitRaw = getFeatureLimit(planId, "tailoring");
+  const tailoringLimit = tailoringLimitRaw === "unlimited" ? null : (tailoringLimitRaw ?? null);
   const isAtLimit = tailoringLimit !== null && usedThisMonth >= tailoringLimit;
 
   return (

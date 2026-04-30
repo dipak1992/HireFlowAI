@@ -25,7 +25,6 @@ export default function UpgradeModal({
   const [selectedPlan, setSelectedPlan] = useState<PlanId>(upgradeRequired);
 
   const plan = PLANS[upgradeRequired];
-  const altPlan = upgradeRequired === "pro" ? PLANS.fasthire : PLANS.pro;
 
   const handleUpgrade = (planId: PlanId) => {
     startTransition(async () => {
@@ -69,25 +68,25 @@ export default function UpgradeModal({
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <span className="font-bold">{plan.name}</span>
-                {plan.badge && (
+                {plan.is_popular && (
                   <Badge className="text-xs bg-primary text-primary-foreground">
-                    {plan.badge}
+                    Most Popular
                   </Badge>
                 )}
               </div>
               <div className="text-right">
-                <span className="text-xl font-bold">{plan.priceDisplay}</span>
-                <span className="text-xs text-muted-foreground">{plan.period}</span>
+                <span className="text-xl font-bold">${plan.price_monthly}</span>
+                <span className="text-xs text-muted-foreground">/mo</span>
               </div>
             </div>
             <ul className="space-y-1.5">
               {plan.features
-                .filter((f) => f.included && f.highlight)
+                .filter((f) => f.included)
                 .slice(0, 4)
                 .map((f) => (
-                  <li key={f.text} className="flex items-center gap-2 text-xs">
+                  <li key={f.key} className="flex items-center gap-2 text-xs">
                     <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0" />
-                    {f.text}
+                    {f.label}
                   </li>
                 ))}
             </ul>

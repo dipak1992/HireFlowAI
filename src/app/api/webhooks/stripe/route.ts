@@ -4,7 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import { grantPurchasedCredits } from "@/lib/stripe-credits";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-03-25.dahlia" as unknown as "2025-01-27.acacia",
+  apiVersion: "2026-03-25.dahlia",
 });
 
 // Use service role client for webhook (bypasses RLS)
@@ -104,7 +104,6 @@ export async function POST(req: NextRequest) {
 
         let plan = "free";
         if (priceId === process.env.STRIPE_PRO_PRICE_ID) plan = "pro";
-        else if (priceId === process.env.STRIPE_FASTHIRE_PRICE_ID) plan = "fasthire";
 
         const canceledAt = rawSub.canceled_at as number | null;
 
