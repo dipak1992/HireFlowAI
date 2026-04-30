@@ -36,6 +36,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { LinkedInIcon } from "@/components/icons";
+import { ResumeUploadDialog } from "@/components/resume/resume-upload-dialog";
 import { createResume, getResumes, deleteResume } from "@/lib/resume-actions";
 import type { ResumeData, ResumeSource, ResumeTemplate } from "@/lib/resume-types";
 
@@ -44,6 +45,7 @@ export default function ResumeStudioPage() {
   const [resumes, setResumes] = useState<ResumeData[]>([]);
   const [loading, setLoading] = useState(true);
   const [createOpen, setCreateOpen] = useState(false);
+  const [uploadOpen, setUploadOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -156,7 +158,7 @@ export default function ResumeStudioPage() {
               </button>
 
               <button
-                onClick={() => handleCreate("upload")}
+                onClick={() => { setCreateOpen(false); setUploadOpen(true); }}
                 disabled={isPending}
                 className="group flex items-start gap-4 rounded-xl border p-4 text-left transition-all hover:border-blue-400/40 hover:bg-blue-500/5 hover:shadow-sm disabled:opacity-50"
               >
@@ -402,6 +404,11 @@ export default function ResumeStudioPage() {
           </button>
         </div>
       )}
+
+      <ResumeUploadDialog
+        open={uploadOpen}
+        onClose={() => { setUploadOpen(false); loadResumes(); }}
+      />
     </div>
   );
 }
