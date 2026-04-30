@@ -727,11 +727,9 @@ CREATE TABLE IF NOT EXISTS public.teams (
 CREATE INDEX IF NOT EXISTS teams_owner_id_idx ON public.teams(owner_id);
 
 ALTER TABLE public.teams ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "team_members_read_team" ON public.teams;
 DROP POLICY IF EXISTS "service_role_manage_teams" ON public.teams;
-CREATE POLICY "team_members_read_team" ON public.teams FOR SELECT TO authenticated
-  USING (id IN (SELECT team_id FROM public.team_members WHERE user_id = auth.uid() AND accepted_at IS NOT NULL));
 CREATE POLICY "service_role_manage_teams" ON public.teams FOR ALL TO service_role USING (TRUE) WITH CHECK (TRUE);
+-- NOTE: "team_members_read_team" policy is created AFTER team_members table below
 
 CREATE TABLE IF NOT EXISTS public.team_members (
   id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -752,6 +750,11 @@ DROP POLICY IF EXISTS "service_role_manage_team_members" ON public.team_members;
 CREATE POLICY "team_members_read_own_team" ON public.team_members FOR SELECT TO authenticated
   USING (team_id IN (SELECT team_id FROM public.team_members tm2 WHERE tm2.user_id = auth.uid() AND tm2.accepted_at IS NOT NULL));
 CREATE POLICY "service_role_manage_team_members" ON public.team_members FOR ALL TO service_role USING (TRUE) WITH CHECK (TRUE);
+
+-- Now safe to create teams policy that references team_members
+DROP POLICY IF EXISTS "team_members_read_team" ON public.teams;
+CREATE POLICY "team_members_read_team" ON public.teams FOR SELECT TO authenticated
+  USING (id IN (SELECT team_id FROM public.team_members WHERE user_id = auth.uid() AND accepted_at IS NOT NULL));
 
 DROP TRIGGER IF EXISTS teams_updated_at ON public.teams;
 CREATE TRIGGER teams_updated_at
