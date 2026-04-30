@@ -3,9 +3,12 @@ import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { grantPurchasedCredits } from "@/lib/stripe-credits";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-03-25.dahlia",
-});
+// Lazy getter — avoids module-level instantiation during build
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: "2026-03-25.dahlia",
+  });
+}
 
 // Use service role client for webhook (bypasses RLS)
 function getServiceClient() {
@@ -26,6 +29,7 @@ function getPeriodDates(sub: Record<string, unknown>) {
 }
 
 export async function POST(req: NextRequest) {
+  const stripe = getStripe();
   const body = await req.text();
   const sig = req.headers.get("stripe-signature");
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;

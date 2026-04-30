@@ -7,9 +7,11 @@ import { createClient } from "@/lib/supabase/server";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-03-25.dahlia",
-});
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: "2026-03-25.dahlia",
+  });
+}
 
 export const CANCEL_REASONS = [
   { id: "too_expensive", label: "It's too expensive" },
@@ -29,6 +31,7 @@ export async function pauseSubscription(
   months: 1 | 2 | 3
 ): Promise<{ success?: boolean; error?: string }> {
   try {
+    const stripe = getStripe();
     const supabase = await createClient();
     const {
       data: { user },
@@ -71,6 +74,7 @@ export async function pauseSubscription(
 
 export async function resumeSubscription(): Promise<{ success?: boolean; error?: string }> {
   try {
+    const stripe = getStripe();
     const supabase = await createClient();
     const {
       data: { user },
@@ -107,6 +111,7 @@ export async function cancelSubscriptionWithSurvey(
   feedback?: string
 ): Promise<{ success?: boolean; error?: string }> {
   try {
+    const stripe = getStripe();
     const supabase = await createClient();
     const {
       data: { user },
@@ -158,6 +163,7 @@ export async function offerChurnDiscount(): Promise<{
   error?: string;
 }> {
   try {
+    const stripe = getStripe();
     const supabase = await createClient();
     const {
       data: { user },

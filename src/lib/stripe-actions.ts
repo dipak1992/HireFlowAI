@@ -6,9 +6,11 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-03-25.dahlia",
-});
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: "2026-03-25.dahlia",
+  });
+}
 
 // ─── Get current subscription ─────────────────────────────────────────────────
 
@@ -167,6 +169,7 @@ export async function checkFeatureAccess(
 // ─── Stripe Checkout ──────────────────────────────────────────────────────────
 
 export async function createCheckoutSession(planId: PlanId) {
+  const stripe = getStripe();
   const supabase = await createClient();
   const {
     data: { user },
@@ -226,6 +229,7 @@ export async function createCheckoutSession(planId: PlanId) {
 // ─── Stripe Customer Portal ───────────────────────────────────────────────────
 
 export async function createPortalSession() {
+  const stripe = getStripe();
   const supabase = await createClient();
   const {
     data: { user },
@@ -251,6 +255,7 @@ export async function createPortalSession() {
 // ─── Cancel subscription ──────────────────────────────────────────────────────
 
 export async function cancelSubscription() {
+  const stripe = getStripe();
   const supabase = await createClient();
   const {
     data: { user },
@@ -276,6 +281,7 @@ export async function cancelSubscription() {
 // ─── Switch to Annual Plan ────────────────────────────────────────────────────
 
 export async function switchToAnnual(): Promise<{ url?: string; error?: string }> {
+  const stripe = getStripe();
   const supabase = await createClient();
   const {
     data: { user },

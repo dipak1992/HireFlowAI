@@ -5,9 +5,11 @@ import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 
 // Use the project's Stripe API version
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-03-25.dahlia",
-});
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: "2026-03-25.dahlia",
+  });
+}
 
 // ─── Credit packages ──────────────────────────────────────────────────────────
 
@@ -72,6 +74,7 @@ export async function createCreditCheckoutSession({
   }
 
   try {
+    const stripe = getStripe();
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       customer_email: userEmail,

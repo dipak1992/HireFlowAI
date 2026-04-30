@@ -8,9 +8,11 @@ import { createClient as createServiceClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
 import { type Team, type TeamMember, type TeamUsageStats, TEAM_PLANS, type TeamPlanId } from "@/lib/team-types";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-03-25.dahlia",
-});
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: "2026-03-25.dahlia",
+  });
+}
 
 // ─── Create Team ──────────────────────────────────────────────────────────────
 
@@ -20,6 +22,7 @@ export async function createTeam(
   seatCount: number
 ): Promise<{ team?: Team; checkoutUrl?: string; error?: string }> {
   try {
+    const stripe = getStripe();
     const supabase = await createClient();
     const {
       data: { user },
