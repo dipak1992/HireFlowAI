@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe-config";
+import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
-import type Stripe from "stripe";
+import { grantPurchasedCredits } from "@/lib/stripe-credits";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2026-03-25.dahlia" as unknown as "2025-01-27.acacia",
+});
 
 // Use service role client for webhook (bypasses RLS)
 function getServiceClient() {
@@ -45,6 +49,24 @@ export async function POST(req: NextRequest) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
         const userId = session.metadata?.user_id;
+        const sessionType = session.metadata?.type;
+
+        // ── Credit purchase (one-time payment) ──────────────────────────────
+        if (sessionType === "credit_purchase") {
+          const packageId = session.metadata?.package_id;
+          const credits = parseInt(session.metadata?.credits || "0", 10);
+          if (userId && packageId && credits > 0) {
+            await grantPurchasedCredits({
+              userId,
+              packageId,
+              credits,
+              stripeSessionId: session.id,
+            });
+          }
+          break;
+        }
+
+        // ── Subscription checkout ────────────────────────────────────────────
         const planId = session.metadata?.plan_id;
         if (!userId || !planId) break;
 
