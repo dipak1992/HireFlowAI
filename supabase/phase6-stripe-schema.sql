@@ -32,9 +32,22 @@ CREATE TABLE IF NOT EXISTS usage_logs (
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   feature TEXT NOT NULL CHECK (feature IN ('tailoring', 'saved_jobs', 'ai_prep', 'export_pdf', 'export_docx')),
   used_at TIMESTAMPTZ DEFAULT NOW(),
-  -- Month bucket for easy counting (YYYY-MM)
-  month_bucket TEXT GENERATED ALWAYS AS (TO_CHAR(used_at, 'YYYY-MM')) STORED
+  -- Month bucket for easy counting (YYYY-MM), populated by trigger
+  month_bucket TEXT
 );
+
+CREATE OR REPLACE FUNCTION public.set_usage_log_month_bucket()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.month_bucket := TO_CHAR(COALESCE(NEW.used_at, NOW()), 'YYYY-MM');
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS set_usage_log_month_bucket ON public.usage_logs;
+CREATE TRIGGER set_usage_log_month_bucket
+  BEFORE INSERT ON public.usage_logs
+  FOR EACH ROW EXECUTE FUNCTION public.set_usage_log_month_bucket();
 
 -- Enable RLS
 ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
