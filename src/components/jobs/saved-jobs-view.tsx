@@ -42,9 +42,9 @@ import {
   EXPERIENCE_LABELS,
 } from "@/lib/job-types";
 import {
-  getSavedJobs,
-  unsaveJob,
-  updateSavedJobStatus,
+  getSavedJobsWithStatusAction,
+  unsaveJobAction,
+  updateSavedJobStatusAction,
 } from "@/lib/job-actions";
 
 interface SavedJobsViewProps {
@@ -73,24 +73,28 @@ export default function SavedJobsView({ onBack }: SavedJobsViewProps) {
 
   async function loadSavedJobs() {
     setLoading(true);
-    const data = await getSavedJobs();
-    setSavedJobs(data as SavedJob[]);
+    const { jobs } = await getSavedJobsWithStatusAction();
+    setSavedJobs(jobs);
     setLoading(false);
   }
 
   async function handleStatusChange(jobId: string, status: SavedJobStatus) {
-    await updateSavedJobStatus(jobId, status);
+    await updateSavedJobStatusAction(jobId, status);
     await loadSavedJobs();
   }
 
   async function handleRemove(jobId: string) {
     if (!confirm("Remove this job from saved?")) return;
-    await unsaveJob(jobId);
+    await unsaveJobAction(jobId);
     await loadSavedJobs();
   }
 
   async function handleSaveNotes(jobId: string) {
-    await updateSavedJobStatus(jobId, savedJobs.find((sj) => sj.job_id === jobId)?.status || "saved", notesText);
+    await updateSavedJobStatusAction(
+      jobId,
+      savedJobs.find((sj) => sj.job_id === jobId)?.status || "saved",
+      notesText
+    );
     setNotesJobId(null);
     setNotesText("");
     await loadSavedJobs();

@@ -276,6 +276,102 @@ export async function getSavedJobsAction(): Promise<{
   return { jobs };
 }
 
+// ----- Saved Jobs Status & Notes -----
+
+export async function updateSavedJobStatusAction(
+  jobId: string,
+  status: string,
+  notes?: string
+): Promise<{ success: boolean; error?: string }> {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { success: false, error: "You must be logged in." };
+  }
+
+  const updateData: Record<string, unknown> = {
+    status,
+    updated_at: new Date().toISOString(),
+  };
+  if (status === "applied") {
+    updateData.applied_at = new Date().toISOString();
+  }
+  if (notes !== undefined) {
+    updateData.notes = notes;
+  }
+
+  const { error } = await supabase
+    .from("saved_jobs")
+    .update(updateData)
+    .eq("user_id", user.id)
+    .eq("job_id", jobId);
+
+  if (error) {
+    console.error("Error updating saved job status:", error);
+    return { success: false, error: "Failed to update job status." };
+  }
+
+  revalidatePath("/dashboard/jobs");
+  return { success: true };
+}
+
+export async function getSavedJobsWithStatusAction(): Promise<{
+  jobs: import("@/lib/job-types").SavedJob[];
+  error?: string;
+}> {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { jobs: [], error: "You must be logged in." };
+  }
+
+  const { data, error } = await supabase
+    .from("saved_jobs")
+    .select(
+      `
+      id, user_id, job_id, status, notes, applied_at, resume_id, tailoring_session_id, created_at, updated_at,
+      jobs (
+        id, title, company, company_logo, company_website,
+        location, is_remote, job_type, description, apply_url,
+        salary_min, salary_max, salary_currency, salary_period,
+        posted_at, source, required_skills, external_id
+      )
+    `
+    )
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching saved jobs:", error);
+    return { jobs: [], error: "Failed to load saved jobs." };
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const jobs = ((data as any[]) || []).map((row) => ({
+    id: row.id,
+    user_id: row.user_id,
+    job_id: row.job_id,
+    status: row.status || "saved",
+    notes: row.notes || "",
+    applied_at: row.applied_at,
+    resume_id: row.resume_id,
+    tailoring_session_id: row.tailoring_session_id,
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+    job: row.jobs ?? undefined,
+  }));
+
+  return { jobs };
+}
+
 // ----- Tailoring Counter (for landing page social proof) -----
 
 export async function getTailoringCountAction(): Promise<number> {
