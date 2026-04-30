@@ -12,6 +12,10 @@
     {
       "path": "/api/cron/job-alerts",
       "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/cron/win-back",
+      "schedule": "0 10 * * *"
     }
   ],
   "functions": {
@@ -26,6 +30,15 @@
     },
     "src/app/api/cron/job-alerts/route.ts": {
       "maxDuration": 60
+    },
+    "src/app/api/inngest/route.ts": {
+      "maxDuration": 300
+    },
+    "src/app/api/v1/tailor/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/v1/jobs/route.ts": {
+      "maxDuration": 30
     }
   },
   "headers": [
