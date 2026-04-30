@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   Card,
@@ -39,6 +40,7 @@ import { createResume, getResumes, deleteResume } from "@/lib/resume-actions";
 import type { ResumeData, ResumeSource, ResumeTemplate } from "@/lib/resume-types";
 
 export default function ResumeStudioPage() {
+  const router = useRouter();
   const [resumes, setResumes] = useState<ResumeData[]>([]);
   const [loading, setLoading] = useState(true);
   const [createOpen, setCreateOpen] = useState(false);
@@ -58,7 +60,10 @@ export default function ResumeStudioPage() {
 
   function handleCreate(source: ResumeSource) {
     startTransition(async () => {
-      await createResume(source, "ats");
+      const result = await createResume(source, "ats");
+      if (result?.id) {
+        router.push(`/dashboard/resume/${result.id}`);
+      }
     });
   }
 
@@ -68,6 +73,7 @@ export default function ResumeStudioPage() {
     startTransition(async () => {
       await deleteResume(resumeId);
       setDeletingId(null);
+      loadResumes();
     });
   }
 

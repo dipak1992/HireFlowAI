@@ -122,7 +122,7 @@ export async function createResume(source: ResumeSource, template: ResumeTemplat
     return { error: "Failed to create resume" };
   }
 
-  redirect(`/dashboard/resume/${data.id}`);
+  return { id: data.id };
 }
 
 export async function updateResume(resumeId: string, updates: Partial<ResumeData>) {
@@ -168,15 +168,20 @@ export async function updateResume(resumeId: string, updates: Partial<ResumeData
 export async function deleteResume(resumeId: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) return { error: "Not authenticated" };
 
-  await supabase
+  const { error } = await supabase
     .from("resumes")
     .delete()
     .eq("id", resumeId)
     .eq("user_id", user.id);
 
-  redirect("/dashboard/resume");
+  if (error) {
+    console.error("Error deleting resume:", error);
+    return { error: "Failed to delete resume" };
+  }
+
+  return { success: true };
 }
 
 export async function saveResumeVersion(resumeId: string, versionName?: string) {
