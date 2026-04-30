@@ -9,7 +9,6 @@ import {
   XCircle,
   Zap,
   Sparkles,
-  Rocket,
   CreditCard,
   ExternalLink,
   Loader2,
@@ -17,7 +16,7 @@ import {
   AlertCircle,
   Calendar,
 } from "lucide-react";
-import { PLANS, PLAN_ORDER, type PlanId } from "@/lib/stripe-config";
+import { PLANS, isFeatureIncluded, getFeatureLimit, type PlanId } from "@/lib/stripe-config";
 import {
   getSubscription,
   getAllUsage,
@@ -27,16 +26,16 @@ import {
 } from "@/lib/stripe-actions";
 import { cn } from "@/lib/utils";
 
+const PLAN_ORDER: PlanId[] = ["free", "pro"];
+
 const PLAN_ICONS: Record<PlanId, React.ReactNode> = {
   free: <Zap className="h-5 w-5" />,
   pro: <Sparkles className="h-5 w-5" />,
-  fasthire: <Rocket className="h-5 w-5" />,
 };
 
 const PLAN_COLORS: Record<PlanId, string> = {
   free: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
   pro: "bg-primary/10 text-primary",
-  fasthire: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
 };
 
 interface Subscription {
@@ -55,12 +54,10 @@ export default function BillingPage() {
   const [successMsg, setSuccessMsg] = useState("");
 
   useEffect(() => {
-    // Check URL params for success/cancel
     const params = new URLSearchParams(window.location.search);
     if (params.get("success") === "true") {
       setSuccessMsg(`🎉 Welcome to ${params.get("plan") ?? "your new plan"}! Your subscription is now active.`);
     }
-
     loadData();
   }, []);
 
@@ -99,14 +96,16 @@ export default function BillingPage() {
 
   const currentPlan = (sub?.plan ?? "free") as PlanId;
   const planData = PLANS[currentPlan];
-  const limits = planData.limits;
 
+  // Usage items derived from plan features
+  const tailoringLimit = getFeatureLimit(currentPlan, "tailoring");
   const usageItems = [
     {
       label: "Resume Tailoring",
       feature: "tailoring",
       used: usage.tailoring ?? 0,
-      limit: limits.tailoring_per_month,
+      limit: tailoringLimit === "unlimited" ? null : tailoringLimit,
+      unlimited: tailoringLimit === "unlimited",
     },
   ];
 
@@ -165,8 +164,12 @@ export default function BillingPage() {
               </div>
             </div>
             <div className="text-right">
-              <p className="text-2xl font-bold">{planData.priceDisplay}</p>
-              <p className="text-xs text-muted-foreground">{planData.period}</p>
+              <p className="text-2xl font-bold">
+                {planData.price_monthly === 0 ? "$0" : `$${planData.price_monthly}`}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {planData.price_monthly === 0 ? "/forever" : "/month"}
+              </p>
             </div>
           </div>
 
@@ -230,22 +233,21 @@ export default function BillingPage() {
         <CardContent className="space-y-4">
           {usageItems.map((item) => {
             const pct = item.limit ? Math.min((item.used / item.limit) * 100, 100) : 0;
-            const isUnlimited = item.limit === null;
-            const isAtLimit = !isUnlimited && item.used >= (item.limit ?? 0);
+            const isAtLimit = !item.unlimited && item.limit !== null && item.used >= (item.limit ?? 0);
 
             return (
               <div key={item.feature} className="space-y-1.5">
                 <div className="flex items-center justify-between text-sm">
                   <span className="font-medium">{item.label}</span>
                   <span className={cn("text-xs", isAtLimit ? "text-red-600 font-semibold" : "text-muted-foreground")}>
-                    {isUnlimited ? (
+                    {item.unlimited ? (
                       <span className="text-primary font-medium">Unlimited ✓</span>
                     ) : (
                       `${item.used} / ${item.limit}`
                     )}
                   </span>
                 </div>
-                {!isUnlimited && (
+                {!item.unlimited && (
                   <div className="h-2 rounded-full bg-muted overflow-hidden">
                     <div
                       className={cn(
@@ -274,14 +276,13 @@ export default function BillingPage() {
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Feature Access</p>
             <div className="grid grid-cols-2 gap-2">
               {[
-                { label: "AI Interview Prep", key: "ai_prep" as const },
+                { label: "AI Interview Prep", key: "ai_interview_prep" as const },
                 { label: "Premium Exports", key: "premium_exports" as const },
-                { label: "LinkedIn Analysis", key: "linkedin_premium" as const },
-                { label: "Urgent Alerts", key: "urgent_alerts" as const },
-                { label: "Priority Nearby", key: "priority_nearby" as const },
-                { label: "Quick Apply", key: "quick_apply" as const },
+                { label: "Salary Tips", key: "salary_tips" as const },
+                { label: "Career Insights", key: "career_insights" as const },
+                { label: "Priority Support", key: "priority_support" as const },
               ].map((item) => {
-                const hasAccess = limits[item.key] as boolean;
+                const hasAccess = isFeatureIncluded(currentPlan, item.key);
                 return (
                   <div key={item.key} className="flex items-center gap-2 text-xs">
                     {hasAccess ? (
@@ -304,49 +305,43 @@ export default function BillingPage() {
       {currentPlan === "free" && (
         <div>
           <h2 className="text-base font-semibold mb-4">Upgrade Your Plan</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {(["pro", "fasthire"] as PlanId[]).map((planId) => {
+          <div className="grid grid-cols-1 gap-4 max-w-sm">
+            {(["pro"] as PlanId[]).map((planId) => {
               const plan = PLANS[planId];
               return (
                 <div
                   key={planId}
-                  className={cn(
-                    "rounded-xl border-2 p-5 flex flex-col gap-4",
-                    planId === "pro" ? "border-primary" : "border-orange-300 dark:border-orange-700"
-                  )}
+                  className="rounded-xl border-2 border-primary p-5 flex flex-col gap-4"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className={cn(
-                        "flex h-8 w-8 items-center justify-center rounded-lg",
-                        planId === "pro" ? "bg-primary text-primary-foreground" : "bg-orange-500 text-white"
-                      )}>
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                         {PLAN_ICONS[planId]}
                       </div>
                       <span className="font-bold">{plan.name}</span>
-                      {plan.badge && (
-                        <Badge className={cn(
-                          "text-xs",
-                          planId === "pro" ? "bg-primary text-primary-foreground" : "bg-orange-500 text-white"
-                        )}>
-                          {plan.badge}
+                      {plan.is_popular && (
+                        <Badge className="text-xs bg-primary text-primary-foreground">
+                          Most Popular
                         </Badge>
                       )}
                     </div>
                     <div className="text-right">
-                      <span className="text-xl font-bold">{plan.priceDisplay}</span>
-                      <span className="text-xs text-muted-foreground">{plan.period}</span>
+                      <span className="text-xl font-bold">${plan.price_monthly}</span>
+                      <span className="text-xs text-muted-foreground">/month</span>
                     </div>
                   </div>
 
                   <ul className="space-y-1.5">
                     {plan.features
-                      .filter((f) => f.included && f.highlight)
-                      .slice(0, 4)
+                      .filter((f) => f.included)
+                      .slice(0, 5)
                       .map((f) => (
-                        <li key={f.text} className="flex items-center gap-2 text-xs">
+                        <li key={f.key} className="flex items-center gap-2 text-xs">
                           <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0" />
-                          {f.text}
+                          {f.label}
+                          {f.limit && f.limit !== "unlimited" && (
+                            <span className="text-muted-foreground">({f.limit})</span>
+                          )}
                         </li>
                       ))}
                   </ul>
@@ -354,11 +349,8 @@ export default function BillingPage() {
                   <Button
                     onClick={() => handleUpgrade(planId)}
                     disabled={isPending}
-                    variant={planId === "pro" ? "default" : "outline"}
-                    className={cn(
-                      "w-full",
-                      planId === "fasthire" && "border-orange-400 text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-950/30"
-                    )}
+                    variant="default"
+                    className="w-full"
                   >
                     {isPending ? (
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
