@@ -243,10 +243,12 @@ export default function ResumeStudioPage() {
               { icon: TrendingUp, title: "ATS Scoring", desc: "See how well your resume passes ATS filters" },
               { icon: FileText, title: "3 Templates", desc: "ATS Classic, Professional, and Fast Apply" },
             ].map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="rounded-xl border bg-background p-4">
-                <Icon className="h-5 w-5 text-primary mb-2" />
-                <p className="font-medium text-sm">{title}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>
+              <div key={title} className="rounded-xl border border-border bg-card shadow-sm p-4">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 mb-3">
+                  <Icon className="h-4 w-4 text-primary" />
+                </div>
+                <p className="font-semibold text-sm text-foreground">{title}</p>
+                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
