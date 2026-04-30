@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { getReferralCode, getReferrals } from "@/lib/referral-actions";
+import { getReferralStats } from "@/lib/referral-actions";
 import { InviteFriends } from "@/components/referral/invite-friends";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -42,11 +42,12 @@ const STATUS_CONFIG = {
 };
 
 export default async function ReferralsPage() {
-  const [{ code }, { referrals, total, converted }] = await Promise.all([
-    getReferralCode(),
-    getReferrals(),
-  ]);
+  const { stats } = await getReferralStats();
 
+  const code = stats?.code ?? null;
+  const referrals = stats?.referrals ?? [];
+  const total = stats?.totalInvited ?? 0;
+  const converted = stats?.totalConverted ?? 0;
   const pending = total - converted;
 
   return (
