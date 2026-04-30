@@ -35,7 +35,6 @@ import {
   Loader2,
   ArrowRight,
 } from "lucide-react";
-import { LinkedInIcon } from "@/components/icons";
 import { ResumeUploadDialog } from "@/components/resume/resume-upload-dialog";
 import { createResume, getResumes, deleteResume } from "@/lib/resume-actions";
 import type { ResumeData, ResumeSource, ResumeTemplate } from "@/lib/resume-types";
@@ -185,23 +184,6 @@ export default function ResumeStudioPage() {
                 </div>
                 <ArrowRight className="h-4 w-4 text-muted-foreground mt-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
               </button>
-
-              <button
-                onClick={() => handleCreate("linkedin")}
-                disabled={isPending}
-                className="group flex items-start gap-4 rounded-xl border p-4 text-left transition-all hover:border-[#0077B5]/30 hover:bg-[#0077B5]/5 hover:shadow-sm disabled:opacity-50"
-              >
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#0077B5]/10 group-hover:bg-[#0077B5]/20 transition-colors">
-                  <LinkedInIcon className="h-5 w-5 text-[#0077B5]" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold">Generate from LinkedIn</p>
-                  <p className="text-sm text-muted-foreground mt-0.5">
-                    Auto-fill your resume using your imported LinkedIn profile data.
-                  </p>
-                </div>
-                <ArrowRight className="h-4 w-4 text-muted-foreground mt-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-              </button>
             </div>
             {isPending && (
               <div className="flex items-center justify-center gap-2 py-2 text-sm text-muted-foreground">
@@ -242,8 +224,7 @@ export default function ResumeStudioPage() {
           </div>
           <h3 className="text-xl font-semibold">No resumes yet</h3>
           <p className="text-muted-foreground mt-2 max-w-sm text-sm">
-            Create your first AI-powered resume. Build from scratch, upload an existing one,
-            or generate from your LinkedIn profile.
+            Create your first AI-powered resume. Build from scratch or upload an existing one.
           </p>
           <div className="flex flex-wrap gap-3 mt-6 justify-center">
             <Button onClick={() => setCreateOpen(true)} className="gap-1.5">
@@ -413,7 +394,7 @@ export default function ResumeStudioPage() {
                 <div>
                   <p className="font-semibold">Create New Resume</p>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    Build, upload, or generate from LinkedIn
+                    Build from scratch or upload a resume
                   </p>
                 </div>
               </CardContent>
