@@ -1,157 +1,211 @@
-import Stripe from "stripe";
+// src/lib/stripe-config.ts
+// Stripe plans configuration — simplified to Free + Pro
 
-// Stripe singleton (server-side only)
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "sk_test_placeholder", {
-  apiVersion: "2026-03-25.dahlia",
-  typescript: true,
-});
+export type PlanId = "free" | "pro";
 
-// ─── Plan definitions ─────────────────────────────────────────────────────────
-
-export type PlanId = "free" | "pro" | "fasthire";
+export type FeatureKey =
+  | "tailoring"
+  | "saved_jobs"
+  | "applications"
+  | "resumes"
+  | "ai_interview_prep"
+  | "premium_exports"
+  | "salary_tips"
+  | "career_insights"
+  | "priority_support";
 
 export interface PlanFeature {
-  text: string;
+  key: FeatureKey;
+  label: string;
   included: boolean;
-  highlight?: boolean;
+  limit?: number | "unlimited";
 }
 
 export interface Plan {
   id: PlanId;
   name: string;
-  price: number; // USD cents per month (0 = free)
-  priceDisplay: string;
-  period: string;
   description: string;
-  badge?: string;
-  popular?: boolean;
-  stripePriceId: string | null; // null for free
+  price_monthly: number;
+  price_annual: number;
+  stripe_price_id_monthly: string | null;
+  stripe_price_id_annual: string | null;
   features: PlanFeature[];
-  limits: {
-    tailoring_per_month: number | null; // null = unlimited
-    saved_jobs: number | null;
-    ai_prep: boolean;
-    premium_exports: boolean;
-    linkedin_premium: boolean;
-    urgent_alerts: boolean;
-    priority_nearby: boolean;
-    quick_apply: boolean;
-  };
+  is_popular: boolean;
 }
 
 export const PLANS: Record<PlanId, Plan> = {
   free: {
     id: "free",
     name: "Free",
-    price: 0,
-    priceDisplay: "$0",
-    period: "forever",
-    description: "Get started with essential job search tools",
-    stripePriceId: null,
+    description: "Perfect to try AI resume tailoring.",
+    price_monthly: 0,
+    price_annual: 0,
+    stripe_price_id_monthly: null,
+    stripe_price_id_annual: null,
+    is_popular: false,
     features: [
-      { text: "3 resume tailoring uses/month", included: true },
-      { text: "10 saved jobs", included: true },
-      { text: "Job Dashboard (Recommended, Remote, Urgent)", included: true },
-      { text: "Application Tracker (Kanban + Table)", included: true },
-      { text: "Basic resume builder", included: true },
-      { text: "LinkedIn import", included: true },
-      { text: "AI Interview Prep", included: false },
-      { text: "Premium resume exports (PDF/DOCX)", included: false },
-      { text: "LinkedIn premium analysis", included: false },
-      { text: "Urgent local job alerts", included: false },
+      { key: "resumes", label: "Resumes", included: true, limit: 1 },
+      {
+        key: "tailoring",
+        label: "AI tailoring per month",
+        included: true,
+        limit: 1,
+      },
+      { key: "saved_jobs", label: "Saved jobs", included: true, limit: 5 },
+      {
+        key: "applications",
+        label: "Tracked applications",
+        included: true,
+        limit: 10,
+      },
+      { key: "premium_exports", label: "PDF & DOCX export", included: false },
+      { key: "ai_interview_prep", label: "AI Interview Prep", included: false },
+      {
+        key: "salary_tips",
+        label: "Salary negotiation tips",
+        included: false,
+      },
+      { key: "career_insights", label: "Career insights", included: false },
+      { key: "priority_support", label: "Priority support", included: false },
     ],
-    limits: {
-      tailoring_per_month: 3,
-      saved_jobs: 10,
-      ai_prep: false,
-      premium_exports: false,
-      linkedin_premium: false,
-      urgent_alerts: false,
-      priority_nearby: false,
-      quick_apply: false,
-    },
   },
   pro: {
     id: "pro",
     name: "Pro",
-    price: 1900,
-    priceDisplay: "$19",
-    period: "/month",
-    description: "Unlimited AI-powered job search and career tools",
-    badge: "Most Popular",
-    popular: true,
-    stripePriceId: process.env.STRIPE_PRO_PRICE_ID ?? "price_pro_placeholder",
+    description: "For serious job seekers who want every advantage.",
+    price_monthly: 19,
+    price_annual: 190,
+    stripe_price_id_monthly: process.env.STRIPE_PRO_PRICE_ID || "",
+    stripe_price_id_annual: process.env.STRIPE_PRO_ANNUAL_PRICE_ID || "",
+    is_popular: true,
     features: [
-      { text: "Unlimited resume tailoring", included: true, highlight: true },
-      { text: "Unlimited saved jobs", included: true, highlight: true },
-      { text: "AI Interview Prep (questions, tips)", included: true, highlight: true },
-      { text: "Premium resume exports (PDF/DOCX)", included: true, highlight: true },
-      { text: "LinkedIn premium career analysis", included: true, highlight: true },
-      { text: "Job Dashboard + all tabs", included: true },
-      { text: "Application Tracker (Kanban + Table)", included: true },
-      { text: "Full resume builder", included: true },
-      { text: "Salary negotiation tips", included: true },
-      { text: "Career progression insights", included: true },
+      {
+        key: "resumes",
+        label: "Resumes",
+        included: true,
+        limit: "unlimited",
+      },
+      {
+        key: "tailoring",
+        label: "AI tailoring",
+        included: true,
+        limit: "unlimited",
+      },
+      {
+        key: "saved_jobs",
+        label: "Saved jobs",
+        included: true,
+        limit: "unlimited",
+      },
+      {
+        key: "applications",
+        label: "Tracked applications",
+        included: true,
+        limit: "unlimited",
+      },
+      { key: "premium_exports", label: "PDF & DOCX export", included: true },
+      { key: "ai_interview_prep", label: "AI Interview Prep", included: true },
+      {
+        key: "salary_tips",
+        label: "Salary negotiation tips",
+        included: true,
+      },
+      { key: "career_insights", label: "Career insights", included: true },
+      { key: "priority_support", label: "Priority support", included: true },
     ],
-    limits: {
-      tailoring_per_month: null,
-      saved_jobs: null,
-      ai_prep: true,
-      premium_exports: true,
-      linkedin_premium: true,
-      urgent_alerts: false,
-      priority_nearby: false,
-      quick_apply: false,
-    },
-  },
-  fasthire: {
-    id: "fasthire",
-    name: "FastHire",
-    price: 1500,
-    priceDisplay: "$15",
-    period: "/month",
-    description: "Speed-optimized tools for urgent job seekers",
-    badge: "Best for Speed",
-    stripePriceId: process.env.STRIPE_FASTHIRE_PRICE_ID ?? "price_fasthire_placeholder",
-    features: [
-      { text: "Urgent local job alerts", included: true, highlight: true },
-      { text: "Priority nearby jobs feed", included: true, highlight: true },
-      { text: "Quick apply tools", included: true, highlight: true },
-      { text: "3 resume tailoring uses/month", included: true },
-      { text: "10 saved jobs", included: true },
-      { text: "Application Tracker", included: true },
-      { text: "AI Interview Prep", included: false },
-      { text: "Premium resume exports", included: false },
-      { text: "LinkedIn premium analysis", included: false },
-    ],
-    limits: {
-      tailoring_per_month: 3,
-      saved_jobs: 10,
-      ai_prep: false,
-      premium_exports: false,
-      linkedin_premium: false,
-      urgent_alerts: true,
-      priority_nearby: true,
-      quick_apply: true,
-    },
   },
 };
 
-export const PLAN_ORDER: PlanId[] = ["free", "pro", "fasthire"];
+// ----- Feature Gate Helpers -----
 
-// ─── Usage limits ─────────────────────────────────────────────────────────────
-
-export type FeatureKey = keyof Plan["limits"];
-
-export function getPlanLimits(planId: PlanId) {
-  return PLANS[planId].limits;
+export function getPlan(planId: string | null | undefined): Plan {
+  if (planId && planId in PLANS) {
+    return PLANS[planId as PlanId];
+  }
+  return PLANS.free;
 }
 
-export function canUseFeature(planId: PlanId, feature: FeatureKey): boolean {
-  const limits = getPlanLimits(planId);
-  const val = limits[feature];
-  if (typeof val === "boolean") return val;
-  if (val === null) return true; // unlimited
-  if (typeof val === "number") return val > 0;
-  return false;
+export function getFeatureLimit(
+  planId: PlanId,
+  feature: FeatureKey
+): number | "unlimited" {
+  const plan = PLANS[planId];
+  const feat = plan.features.find((f) => f.key === feature);
+  if (!feat || !feat.included) return 0;
+  return feat.limit ?? (feat.included ? "unlimited" : 0);
+}
+
+export function isFeatureIncluded(
+  planId: PlanId,
+  feature: FeatureKey
+): boolean {
+  const plan = PLANS[planId];
+  const feat = plan.features.find((f) => f.key === feature);
+  return feat?.included ?? false;
+}
+
+export function canUseTailoring(
+  planId: PlanId,
+  currentUsage: number
+): boolean {
+  const limit = getFeatureLimit(planId, "tailoring");
+  if (limit === "unlimited") return true;
+  return currentUsage < (limit as number);
+}
+
+export function canSaveJob(planId: PlanId, currentSaved: number): boolean {
+  const limit = getFeatureLimit(planId, "saved_jobs");
+  if (limit === "unlimited") return true;
+  return currentSaved < (limit as number);
+}
+
+export function canAddApplication(
+  planId: PlanId,
+  currentCount: number
+): boolean {
+  const limit = getFeatureLimit(planId, "applications");
+  if (limit === "unlimited") return true;
+  return currentCount < (limit as number);
+}
+
+export function canCreateResume(
+  planId: PlanId,
+  currentCount: number
+): boolean {
+  const limit = getFeatureLimit(planId, "resumes");
+  if (limit === "unlimited") return true;
+  return currentCount < (limit as number);
+}
+
+export function canExportPremium(planId: PlanId): boolean {
+  return isFeatureIncluded(planId, "premium_exports");
+}
+
+export function canUseInterviewPrep(planId: PlanId): boolean {
+  return isFeatureIncluded(planId, "ai_interview_prep");
+}
+
+// ----- Upgrade Message Helpers -----
+
+export function getUpgradeMessage(feature: FeatureKey): string {
+  const messages: Record<FeatureKey, string> = {
+    tailoring:
+      "You've used your free tailoring this month. Upgrade to Pro for unlimited AI tailoring.",
+    saved_jobs:
+      "You've reached the free limit of 5 saved jobs. Upgrade to Pro for unlimited saved jobs.",
+    applications:
+      "Free accounts can track up to 10 applications. Upgrade to Pro for unlimited tracking.",
+    resumes:
+      "Free accounts include 1 resume. Upgrade to Pro for unlimited resumes.",
+    premium_exports:
+      "PDF and DOCX export is a Pro feature. Upgrade to export professional documents.",
+    ai_interview_prep:
+      "AI Interview Prep is a Pro feature. Get tailored questions and STAR-format answers.",
+    salary_tips:
+      "Salary negotiation tips are a Pro feature. Get AI-powered salary insights.",
+    career_insights:
+      "Career progression insights are a Pro feature. Upgrade for personalized career guidance.",
+    priority_support: "Priority support is available on the Pro plan.",
+  };
+  return messages[feature];
 }

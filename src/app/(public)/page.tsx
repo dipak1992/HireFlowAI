@@ -1,400 +1,402 @@
+// src/app/(public)/page.tsx
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import {
-  Zap,
-  Target,
-  Brain,
   ArrowRight,
-  CheckCircle2,
-  Sparkles,
-  Shield,
   FileText,
+  Target,
+  Search,
+  BarChart3,
   ClipboardList,
-  Star,
-  ChevronRight,
-  Rocket,
-  TrendingUp,
-  Users,
+  MessageSquare,
+  CheckCircle2,
+  Zap,
+  Shield,
 } from "lucide-react";
-import {
-  FeatureCard,
-  PricingCard,
-  DashboardMockup,
-} from "@/components/landing/landing-components";
+import { TailoringCounter } from "@/components/landing/tailoring-counter";
+import { BeforeAfterDemo } from "@/components/landing/before-after-demo";
+import { PricingSection } from "@/components/landing/pricing-section";
+import { FAQSection } from "@/components/landing/faq-section";
+
+export const metadata = {
+  title: "HireFlow AI — Tailor Your Resume to Any Job in 60 Seconds",
+  description:
+    "AI-powered resume tailoring that gets you more interviews. Paste a job description, get an ATS-optimized resume with keyword matching in 60 seconds. Free to start.",
+  openGraph: {
+    title: "HireFlow AI — Tailor Your Resume to Any Job in 60 Seconds",
+    description:
+      "AI-powered resume tailoring that gets you more interviews. ATS scoring, keyword optimization, and professional exports.",
+    type: "website",
+  },
+};
 
 export default function LandingPage() {
   return (
-    <>
-      {/* ─── Hero ─── */}
-      <section className="relative overflow-hidden min-h-[88vh] flex items-center">
-        <div className="absolute inset-0 hero-gradient" />
-        <div className="absolute inset-0 bg-dot-pattern opacity-40" />
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-primary/5 blur-3xl -translate-y-1/2 translate-x-1/3" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-indigo-500/5 blur-3xl translate-y-1/2 -translate-x-1/3" />
+    <main className="min-h-screen bg-white dark:bg-zinc-950">
+      {/* ───── HERO ───── */}
+      <section className="relative pt-32 pb-20 px-4 overflow-hidden">
+        {/* Background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-50/80 via-white to-white dark:from-blue-950/20 dark:via-zinc-950 dark:to-zinc-950 pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-blue-400/10 dark:bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="container-wide relative w-full">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center py-20 md:py-24 lg:py-28">
-            {/* Left — Copy */}
-            <div className="animate-fade-in-up">
-              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/6 px-4 py-1.5 text-sm font-medium text-primary mb-8">
-                <Sparkles className="h-3.5 w-3.5" />
-                AI-Powered Career Platform
+        <div className="relative max-w-3xl mx-auto text-center space-y-6">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-semibold">
+            <Zap className="h-3.5 w-3.5" />
+            Powered by GPT-4o
+          </div>
+
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-zinc-900 dark:text-zinc-100 leading-tight tracking-tight">
+            Tailor your resume to any job{" "}
+            <span className="text-blue-600 dark:text-blue-400">
+              in 60 seconds.
+            </span>
+          </h1>
+
+          <p className="text-lg sm:text-xl text-zinc-500 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+            Stop sending the same generic resume to every job. HireFlow AI
+            rewrites your resume to match each job description — with ATS
+            scoring and keyword optimization.
+          </p>
+
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <Link
+              href="/signup"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-base transition-colors shadow-lg shadow-blue-600/20"
+            >
+              Start Free — No Credit Card
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="#how-it-works"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 font-semibold text-base hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+            >
+              See how it works
+            </Link>
+          </div>
+
+          {/* Live counter */}
+          <div className="pt-2">
+            <TailoringCounter />
+          </div>
+
+          {/* Product Screenshot Placeholder */}
+          <div className="mt-10 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-2xl shadow-zinc-900/10 overflow-hidden">
+            <div className="bg-zinc-100 dark:bg-zinc-800 px-4 py-2.5 flex items-center gap-2 border-b border-zinc-200 dark:border-zinc-700">
+              <div className="flex gap-1.5">
+                <div className="w-3 h-3 rounded-full bg-red-400" />
+                <div className="w-3 h-3 rounded-full bg-yellow-400" />
+                <div className="w-3 h-3 rounded-full bg-green-400" />
               </div>
-
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.08]">
-                Find Jobs Near Me.{" "}
-                <span className="gradient-text">Grow Your Career</span>{" "}
-                Faster.
-              </h1>
-
-              <p className="mt-6 text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl">
-                Build resumes, tailor every application, discover real jobs, and
-                track your progress — all powered by AI.
-              </p>
-
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mt-10">
-                <Link
-                  href="/signup"
-                  className={cn(
-                    buttonVariants({ size: "lg" }),
-                    "text-base px-8 h-12 glow-primary-sm transition-all"
-                  )}
-                >
-                  Get Started Free
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-                <Link
-                  href="/pricing"
-                  className={cn(
-                    buttonVariants({ variant: "outline", size: "lg" }),
-                    "text-base px-8 h-12"
-                  )}
-                >
-                  See Pricing
-                </Link>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-8 text-sm text-muted-foreground">
-                {["Free to start", "No fake jobs", "Resume AI included"].map((t) => (
-                  <span key={t} className="flex items-center gap-1.5">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
-                    {t}
-                  </span>
-                ))}
-              </div>
+              <span className="text-xs text-zinc-400 mx-auto">
+                app.hireflow.ai/dashboard/resume
+              </span>
             </div>
-
-            {/* Right — Dashboard Mockup */}
-            <div className="hidden lg:block">
-              <DashboardMockup />
+            {/* Replace this with a real product screenshot */}
+            <div className="aspect-[16/9] bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-800 dark:to-zinc-900 flex items-center justify-center p-8">
+              <div className="text-center space-y-3 max-w-sm">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-sm font-semibold">
+                  <CheckCircle2 className="h-4 w-4" />
+                  ATS Score: 91/100
+                </div>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                  Replace this placeholder with an actual product screenshot of
+                  the tailoring results showing ATS score, keyword matches, and
+                  the tailored resume preview.
+                </p>
+                <p className="text-xs text-zinc-400 italic">
+                  Tip: Use a real screenshot from your app for maximum
+                  conversion
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ─── Trust Bar ─── */}
-      <section className="border-y bg-muted/25 py-6">
-        <div className="container-wide">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 text-sm text-muted-foreground">
-            <span className="font-semibold text-foreground/50 uppercase tracking-widest text-xs">
-              Built for modern job seekers
-            </span>
-            <div className="hidden sm:block w-px h-5 bg-border" />
-            {["AI Resume Builder", "Real Job Listings", "Application Tracker", "Interview Prep"].map((item) => (
-              <span key={item} className="flex items-center gap-2">
-                <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0" />
-                {item}
-              </span>
+      {/* ───── FEATURE PILLS ───── */}
+      <section className="py-6 px-4 border-y border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex flex-wrap justify-center gap-3">
+            {[
+              { icon: Target, label: "ATS-optimized" },
+              { icon: Zap, label: "GPT-4o powered" },
+              { icon: FileText, label: "Export to PDF & DOCX" },
+              { icon: Shield, label: "3 professional templates" },
+              { icon: BarChart3, label: "Keyword analysis" },
+              { icon: CheckCircle2, label: "Free to start" },
+            ].map(({ icon: Icon, label }) => (
+              <div
+                key={label}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 text-sm font-medium shadow-sm"
+              >
+                <Icon className="h-3.5 w-3.5 text-blue-500" />
+                {label}
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ─── Two User Flows ─── */}
-      <section className="section-padding">
-        <div className="container-tight">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <div className="badge-pill-primary inline-flex mb-4">Two paths, one platform</div>
-            <h2 className="text-3xl md:text-4xl font-bold">
-              Find local jobs near you or grow your career
+      {/* ───── THE PROBLEM ───── */}
+      <section className="py-20 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12 space-y-3">
+            <h2 className="text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-100">
+              You&apos;re sending the same resume to every job.
             </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              HireFlow AI adapts to your situation — find jobs hiring now nearby or build toward your next big role.
+            <p className="text-xl text-zinc-500 dark:text-zinc-400">
+              That&apos;s why you&apos;re not getting callbacks.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Find Jobs Near Me */}
-            <div className="feature-card border-orange-200/60 bg-gradient-to-br from-orange-50/50 to-card">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100 text-orange-600 mb-6">
-                <Zap className="h-6 w-6" />
-              </div>
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-orange-100 text-orange-700 px-2.5 py-0.5 text-xs font-semibold mb-3">
-                Hiring Now Nearby
-              </div>
-              <h3 className="text-xl font-bold mb-2">Find Jobs Near Me</h3>
-              <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
-                Warehouse, logistics, restaurant, retail, delivery, hotel, and local jobs hiring near you. See what&apos;s available today and apply fast.
-              </p>
-              <ul className="space-y-2.5 mb-8">
-                {[
-                  "Warehouse, logistics & forklift jobs near you",
-                  "Restaurant, retail & hotel jobs hiring now",
-                  "Delivery, cleaning & general labor roles",
-                  "Weekly pay and shift jobs available",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm">
-                    <CheckCircle2 className="h-4 w-4 text-orange-500 mt-0.5 shrink-0" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/signup"
-                className={cn(buttonVariants({ variant: "outline", size: "sm" }), "border-orange-200 text-orange-700 hover:bg-orange-50")}
-              >
-                Find Jobs Now <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-              </Link>
-            </div>
-
-            {/* Grow Career */}
-            <div className="feature-card border-primary/20 bg-gradient-to-br from-primary/4 to-card">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-6">
-                <TrendingUp className="h-6 w-6" />
-              </div>
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 text-primary px-2.5 py-0.5 text-xs font-semibold mb-3">
-                Career Growth
-              </div>
-              <h3 className="text-xl font-bold mb-2">Grow Your Career</h3>
-              <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
-                Ready for the next level? Strategically position yourself for better roles, higher pay, and more meaningful work with AI-powered tools.
-              </p>
-              <ul className="space-y-2.5 mb-8">
-                {[
-                  "Strategic resume tailoring per role",
-                  "AI interview prep with STAR answers",
-                  "Career insights & skill gap analysis",
-                  "Application tracking & follow-ups",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm">
-                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 shrink-0" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/signup" className={cn(buttonVariants({ size: "sm" }))}>
-                Start Growing <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── Feature Grid ─── */}
-      <section id="features" className="section-padding bg-muted/20">
-        <div className="container-wide">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <div className="badge-pill-primary inline-flex mb-4">Features</div>
-            <h2 className="text-3xl md:text-4xl font-bold">Everything you need to land your next role</h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Powerful AI tools designed to accelerate every step of your job search.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 stagger-children">
-            <FeatureCard icon={<Brain className="h-5 w-5" />} title="AI Job Matching" colorClass="bg-blue-50 text-blue-600"
-              description="Our AI analyzes your skills, experience, and preferences to surface the most relevant opportunities — ranked by fit." />
-            <FeatureCard icon={<FileText className="h-5 w-5" />} title="Resume Studio" colorClass="bg-violet-50 text-violet-600"
-              description="Build ATS-optimized resumes with 3 professional templates. Export as PDF, DOCX, or plain text in seconds." />
-            <FeatureCard icon={<Target className="h-5 w-5" />} title="Job Tailoring Engine" colorClass="bg-emerald-50 text-emerald-600"
-              description="AI rewrites your resume bullets to match each job description. Never send a generic application again." />
-            <FeatureCard icon={<ClipboardList className="h-5 w-5" />} title="Application Tracker" colorClass="bg-orange-50 text-orange-600"
-              description="Kanban board and table view to track every application, interview, and offer — all in one organized place." />
-            <FeatureCard icon={<Sparkles className="h-5 w-5" />} title="AI Interview Prep" colorClass="bg-pink-50 text-pink-600"
-              description="Get tailored interview questions and STAR-format answers based on the specific job you're applying for." />
-            <FeatureCard icon={<Shield className="h-5 w-5" />} title="Privacy First" colorClass="bg-slate-100 text-slate-600"
-              description="Your data is encrypted and secure. We never share your information without explicit consent. You own your data." />
-          </div>
-        </div>
-      </section>
-
-      {/* ─── How It Works ─── */}
-      <section className="section-padding">
-        <div className="container-tight">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <div className="badge-pill-primary inline-flex mb-4">How it works</div>
-            <h2 className="text-3xl md:text-4xl font-bold">From sign-up to hired in 4 steps</h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              No complicated setup. Import your profile, discover jobs, tailor, and apply.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 stagger-children">
+          <div className="grid md:grid-cols-3 gap-6">
             {[
-              { step: "01", icon: <Users className="h-5 w-5" />, title: "Import Profile", colorClass: "bg-blue-100 text-blue-600",
-                desc: "Connect LinkedIn or upload your resume. AI builds your profile in seconds." },
-              { step: "02", icon: <Brain className="h-5 w-5" />, title: "Discover Jobs", colorClass: "bg-violet-100 text-violet-600",
-                desc: "Get AI-matched job recommendations ranked by how well they fit your profile." },
-              { step: "03", icon: <Target className="h-5 w-5" />, title: "Tailor Resume", colorClass: "bg-emerald-100 text-emerald-600",
-                desc: "AI rewrites your resume for each specific job posting in one click." },
-              { step: "04", icon: <Rocket className="h-5 w-5" />, title: "Apply & Track", colorClass: "bg-orange-100 text-orange-600",
-                desc: "Apply with confidence. Track every application and interview in your dashboard." },
+              {
+                icon: FileText,
+                title: "Generic Resume",
+                description:
+                  "Same bullet points, same summary, same skills section for every single application you send.",
+                color: "text-zinc-400",
+                bg: "bg-zinc-50 dark:bg-zinc-900",
+              },
+              {
+                icon: BarChart3,
+                title: "ATS Systems Filter You Out",
+                description:
+                  "Applicant Tracking Systems scan for exact keywords from the job posting. No keywords = automatic rejection.",
+                color: "text-amber-500",
+                bg: "bg-amber-50 dark:bg-amber-900/10",
+              },
+              {
+                icon: Target,
+                title: "Auto-Rejected",
+                description:
+                  "75% of resumes are rejected by ATS before a human ever sees them. Your resume never reaches the recruiter.",
+                color: "text-red-500",
+                bg: "bg-red-50 dark:bg-red-900/10",
+              },
             ].map((item) => (
-              <div key={item.step} className="flex flex-col items-center text-center group">
-                <div className={`relative flex h-16 w-16 items-center justify-center rounded-2xl ${item.colorClass} mb-5 transition-transform duration-200 group-hover:scale-110`}>
-                  {item.icon}
-                  <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-background text-[10px] font-bold">
+              <div
+                key={item.title}
+                className={`rounded-2xl border border-zinc-200 dark:border-zinc-800 ${item.bg} p-6 space-y-3`}
+              >
+                <item.icon className={`h-8 w-8 ${item.color}`} />
+                <h3 className="font-bold text-zinc-900 dark:text-zinc-100">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ───── HOW IT WORKS ───── */}
+      <section
+        id="how-it-works"
+        className="py-20 px-4 bg-zinc-50/50 dark:bg-zinc-900/50"
+      >
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12 space-y-3">
+            <h2 className="text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-100">
+              How HireFlow works
+            </h2>
+            <p className="text-zinc-500 dark:text-zinc-400 text-lg">
+              Three steps. Sixty seconds. A resume that actually gets you
+              interviews.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                step: "1",
+                icon: FileText,
+                title: "Paste the job description",
+                description:
+                  "Copy the job posting text or paste the URL. Our AI reads the full job description and extracts every requirement.",
+              },
+              {
+                step: "2",
+                icon: Zap,
+                title: "AI tailors your resume",
+                description:
+                  "GPT-4o rewrites your bullet points and summary to match the job's exact keywords. See your ATS score jump instantly.",
+              },
+              {
+                step: "3",
+                icon: Target,
+                title: "Download and apply",
+                description:
+                  "Export your tailored resume as a professional PDF or DOCX. Track your application in the built-in tracker.",
+              },
+            ].map((item) => (
+              <div key={item.step} className="text-center space-y-4">
+                <div className="relative inline-flex">
+                  <div className="w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-600/20">
+                    <item.icon className="h-6 w-6 text-white" />
+                  </div>
+                  <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-xs font-bold flex items-center justify-center">
                     {item.step}
                   </span>
                 </div>
-                <h3 className="text-base font-semibold mb-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── Early User Trust Section ─── */}
-      <section className="section-padding bg-muted/20">
-        <div className="container-tight">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <div className="badge-pill-primary inline-flex mb-4">Early Users</div>
-            <h2 className="text-3xl md:text-4xl font-bold">Built with feedback from real users</h2>
-            <p className="mt-4 text-muted-foreground">
-              HireFlow AI is an early-stage platform. Here&apos;s what our first users are saying.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-5 stagger-children">
-            {[
-              { quote: "The resume tailoring feature saved me so much time. Instead of rewriting my resume for every job, the AI does it in seconds.", name: "M.T.", role: "Warehouse Supervisor", location: "Dallas, TX" },
-              { quote: "Way easier than juggling LinkedIn, Indeed, and a spreadsheet. Having everything in one place makes the job search feel manageable.", name: "S.K.", role: "Software Developer", location: "Austin, TX" },
-              { quote: "The application tracker keeps me organized. I used to forget which jobs I applied to — now I can see everything at a glance.", name: "J.R.", role: "Registered Nurse", location: "Houston, TX" },
-            ].map((t, i) => (
-              <div key={i} className="premium-card p-6 flex flex-col gap-4">
-                <div className="flex gap-0.5">
-                  {[1,2,3,4,5].map((j) => (
-                    <Star key={j} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-                <p className="text-sm text-muted-foreground leading-relaxed flex-1">&ldquo;{t.quote}&rdquo;</p>
-                <div className="flex items-center gap-3 pt-2 border-t border-border/50">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary text-sm font-bold shrink-0">
-                    {t.name.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold">{t.name}</p>
-                    <p className="text-xs text-muted-foreground">{t.role} · {t.location}</p>
-                  </div>
-                </div>
+                <h3 className="font-bold text-zinc-900 dark:text-zinc-100">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                  {item.description}
+                </p>
               </div>
             ))}
           </div>
 
-          <p className="text-center text-xs text-muted-foreground mt-8">
-            Feedback from early users of HireFlow AI. Names abbreviated for privacy.
-          </p>
-        </div>
-      </section>
-
-      {/* ─── Pricing ─── */}
-      <section className="section-padding">
-        <div className="container-tight">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <div className="badge-pill-primary inline-flex mb-4">Pricing</div>
-            <h2 className="text-3xl md:text-4xl font-bold">Simple, transparent pricing</h2>
-            <p className="mt-4 text-lg text-muted-foreground">Start free. Upgrade when you&apos;re ready. No hidden fees.</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto items-start">
-            <PricingCard name="Free" price="$0" period="forever" description="Get started with the essentials"
-              features={["3 resume tailorings/mo", "Basic job matching", "1 resume template", "Application tracker"]}
-              cta="Get Started" href="/signup" variant="outline" />
-            <PricingCard name="Pro" price="$19" period="/month" description="For serious job seekers"
-              features={["25 resume tailorings/mo", "Priority job matching", "All resume templates", "AI interview prep", "Career insights"]}
-              cta="Start Pro" href="/signup" variant="default" popular />
-            <PricingCard name="FastHire" price="$15" period="/month" description="Maximum speed to employment"
-              features={["50 resume tailorings/mo", "Fast-track applications", "All resume templates", "AI interview prep", "Priority support"]}
-              cta="Start FastHire" href="/signup" variant="outline" />
-          </div>
-
-          <div className="text-center mt-8">
-            <Link href="/pricing" className="text-sm text-primary hover:underline inline-flex items-center gap-1 font-medium">
-              Compare all features <ChevronRight className="h-3.5 w-3.5" />
+          <div className="text-center mt-10">
+            <Link
+              href="/signup"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors"
+            >
+              Try it now — it&apos;s free
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ─── FAQ ─── */}
-      <section className="section-padding bg-muted/20">
-        <div className="container-narrow">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <div className="badge-pill-primary inline-flex mb-4">FAQ</div>
-            <h2 className="text-3xl md:text-4xl font-bold">Frequently asked questions</h2>
+      {/* ───── FEATURES GRID ───── */}
+      <section className="py-20 px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-100">
+              Everything you need to land your next role
+            </h2>
           </div>
 
-          <div className="space-y-3">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
-              { q: "Is HireFlow AI really free to start?", a: "Yes. Our Free plan gives you 3 resume tailorings per month, basic job matching, and full access to the application tracker. No credit card required." },
-              { q: "How does AI job matching work?", a: "Our AI analyzes your skills, experience, and career goals from your profile. It then scores and ranks open positions based on how well they match, surfacing the most relevant opportunities first." },
-              { q: "Will the AI fabricate experience on my resume?", a: "Never. Our AI only reorganizes and highlights your real experience. It rewrites bullet points to better match job descriptions, but never invents skills or experience you don't have." },
-              { q: "Can I import my LinkedIn profile?", a: "Yes. Connect your LinkedIn account during onboarding and we'll automatically import your work history, education, and skills to build your profile." },
-              { q: "What's the difference between Pro and FastHire?", a: "Pro is designed for strategic career growth with 25 tailorings/month and career insights. FastHire is optimized for speed with 50 tailorings/month — ideal for warehouse, retail, restaurant, and local job seekers who need to find work fast." },
-              { q: "Can I cancel anytime?", a: "Absolutely. No contracts, no hidden fees. Cancel your subscription anytime from your billing dashboard and you'll keep access until the end of your billing period." },
-            ].map((faq, i) => (
-              <details key={i} className="group premium-card">
-                <summary className="flex items-center justify-between cursor-pointer p-5 text-sm font-medium hover:text-primary transition-colors [&::-webkit-details-marker]:hidden list-none">
-                  {faq.q}
-                  <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 ml-4 transition-transform duration-200 group-open:rotate-90" />
-                </summary>
-                <div className="px-5 pb-5 text-sm text-muted-foreground leading-relaxed border-t border-border/40 pt-3">
-                  {faq.a}
+              {
+                icon: Target,
+                title: "AI Resume Tailoring",
+                description:
+                  "AI rewrites your bullets and summary for each specific job. Automatic keyword optimization.",
+                color: "bg-blue-50 dark:bg-blue-900/20 text-blue-600",
+              },
+              {
+                icon: BarChart3,
+                title: "ATS Compatibility Score",
+                description:
+                  "See your ATS score from 0–100 with detailed keyword analysis. Know exactly what to fix.",
+                color: "bg-green-50 dark:bg-green-900/20 text-green-600",
+              },
+              {
+                icon: Search,
+                title: "Real Job Search",
+                description:
+                  "Search real listings from Indeed, LinkedIn, Glassdoor, ZipRecruiter, and more.",
+                color: "bg-purple-50 dark:bg-purple-900/20 text-purple-600",
+              },
+              {
+                icon: FileText,
+                title: "Resume Studio",
+                description:
+                  "3 professional templates. Build from scratch, upload, or import from LinkedIn. Export as PDF or DOCX.",
+                color: "bg-amber-50 dark:bg-amber-900/20 text-amber-600",
+              },
+              {
+                icon: ClipboardList,
+                title: "Application Tracker",
+                description:
+                  "Kanban board and table view. Track every application from saved to offer. Never lose track.",
+                color: "bg-rose-50 dark:bg-rose-900/20 text-rose-600",
+              },
+              {
+                icon: MessageSquare,
+                title: "AI Interview Prep",
+                description:
+                  "Get tailored interview questions and STAR-format answers based on the specific job and your experience.",
+                color: "bg-teal-50 dark:bg-teal-900/20 text-teal-600",
+              },
+            ].map((feature) => (
+              <div
+                key={feature.title}
+                className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 space-y-3 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors"
+              >
+                <div
+                  className={`w-10 h-10 rounded-xl flex items-center justify-center ${feature.color}`}
+                >
+                  <feature.icon className="h-5 w-5" />
                 </div>
-              </details>
+                <h3 className="font-bold text-zinc-900 dark:text-zinc-100">
+                  {feature.title}
+                </h3>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                  {feature.description}
+                </p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ─── Final CTA ─── */}
-      <section className="section-padding">
-        <div className="container-tight">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 px-8 py-16 md:px-16 md:py-20 text-center">
-            <div className="absolute inset-0 bg-dot-pattern opacity-20" />
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-primary/20 blur-3xl rounded-full" />
-            <div className="relative z-10 max-w-2xl mx-auto">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm font-medium text-white/70 mb-8">
-                <Rocket className="h-3.5 w-3.5" />
-                Start your job search today
-              </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white">
-                Ready to land your next role?
-              </h2>
-              <p className="mt-4 text-lg text-white/60 leading-relaxed">
-                Join early users who are finding better jobs faster with HireFlow AI. Free to start — no credit card needed.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10">
-                <Link
-                  href="/signup"
-                  className={cn(buttonVariants({ size: "lg" }), "text-base px-8 h-12 bg-white text-slate-900 hover:bg-white/92 shadow-xl shadow-black/20")}
-                >
-                  Get Started Free <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-                <Link
-                  href="/success-stories"
-                  className={cn(buttonVariants({ variant: "outline", size: "lg" }), "text-base px-8 h-12 border-white/15 text-white hover:bg-white/8 hover:border-white/25")}
-                >
-                  Read Success Stories
-                </Link>
-              </div>
-              <p className="mt-6 text-sm text-white/40">Free plan · No credit card · Cancel anytime</p>
-            </div>
+      {/* ───── BEFORE / AFTER ───── */}
+      <section className="py-20 px-4 bg-zinc-50/50 dark:bg-zinc-900/50">
+        <div className="max-w-4xl mx-auto space-y-8">
+          <div className="text-center space-y-3">
+            <h2 className="text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-100">
+              See the difference AI tailoring makes
+            </h2>
+            <p className="text-zinc-500 dark:text-zinc-400">
+              Same resume. Same job. Completely different results.
+            </p>
+          </div>
+
+          <BeforeAfterDemo />
+
+          <div className="text-center">
+            <Link
+              href="/signup"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors"
+            >
+              Tailor your resume now
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </section>
-    </>
+
+      {/* ───── PRICING ───── */}
+      <PricingSection />
+
+      {/* ───── FAQ ───── */}
+      <FAQSection />
+
+      {/* ───── FINAL CTA ───── */}
+      <section className="py-20 px-4">
+        <div className="max-w-2xl mx-auto">
+          <div className="rounded-3xl bg-gradient-to-br from-blue-600 to-blue-700 p-10 text-center space-y-5 shadow-2xl shadow-blue-600/20">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight">
+              Stop getting ghosted by recruiters.
+            </h2>
+            <p className="text-blue-100 text-lg">
+              Start sending tailored resumes that actually get you interviews.
+              Join thousands of job seekers who&apos;ve already improved their
+              chances.
+            </p>
+            <Link
+              href="/signup"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white hover:bg-blue-50 text-blue-600 font-bold text-lg transition-colors shadow-lg"
+            >
+              Start Free — Takes 30 Seconds
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+            <p className="text-blue-200 text-sm">
+              No credit card required. Free forever on basic plan.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }

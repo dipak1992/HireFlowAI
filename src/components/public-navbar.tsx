@@ -1,142 +1,138 @@
+// src/components/public-navbar.tsx
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { Zap, Menu, X, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Menu, X, ArrowRight } from "lucide-react";
 
-const navLinks = [
-  { label: "Features", href: "/#features" },
-  { label: "Pricing", href: "/pricing" },
-  { label: "Success Stories", href: "/success-stories" },
-  { label: "Blog", href: "/blog" },
-];
-
-export default function PublicNavbar() {
-  const [mobileOpen, setMobileOpen] = useState(false);
+export function PublicNavbar() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const pathname = usePathname();
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 8);
-    window.addEventListener("scroll", handler, { passive: true });
-    return () => window.removeEventListener("scroll", handler);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
+  const navLinks = [
+    { href: "/#how-it-works", label: "Features" },
+    { href: "/pricing", label: "Pricing" },
+    { href: "/blog", label: "Blog" },
+  ];
 
   return (
     <>
       <header
-        className={cn(
-          "sticky top-0 z-50 w-full transition-all duration-200",
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
           scrolled
-            ? "border-b bg-background/90 backdrop-blur-xl shadow-sm shadow-black/5"
-            : "border-b border-transparent bg-background/60 backdrop-blur-md"
-        )}
+            ? "bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 shadow-sm"
+            : "bg-transparent"
+        }`}
       >
-        <div className="container-wide flex h-15 items-center justify-between" style={{ height: "3.75rem" }}>
+        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary shadow-sm shadow-primary/30 transition-all group-hover:shadow-md group-hover:shadow-primary/40 group-hover:scale-105">
-              <Zap className="h-4.5 w-4.5 text-primary-foreground" />
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+              <span className="text-white font-bold text-sm">H</span>
             </div>
-            <span className="text-lg font-bold tracking-tight">
-              HireFlow<span className="text-primary">AI</span>
+            <span className="font-bold text-zinc-900 dark:text-zinc-100 text-lg">
+              HireFlow
             </span>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-0.5">
-            {navLinks.map((item) => (
+          <nav className="hidden md:flex items-center gap-6">
+            {navLinks.map((link) => (
               <Link
-                key={item.href}
-                href={item.href}
-                className="px-3.5 py-2 text-sm font-medium text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted/50 transition-all duration-150"
+                key={link.href}
+                href={link.href}
+                className="text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
               >
-                {item.label}
+                {link.label}
               </Link>
             ))}
           </nav>
 
-          {/* Desktop CTA */}
-          <div className="hidden md:flex items-center gap-2">
+          {/* Desktop CTAs */}
+          <div className="hidden md:flex items-center gap-3">
             <Link
               href="/login"
-              className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "text-sm font-medium")}
+              className="text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
             >
               Log in
             </Link>
             <Link
               href="/signup"
-              className={cn(
-                buttonVariants({ size: "sm" }),
-                "text-sm font-medium shadow-sm shadow-primary/20 hover:shadow-md hover:shadow-primary/25 transition-all"
-              )}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors"
             >
-              Get Started
+              Try Free
+              <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden flex h-9 w-9 items-center justify-center rounded-lg hover:bg-muted transition-colors"
-            onClick={() => setMobileOpen((v) => !v)}
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          {/* Mobile: CTA + Hamburger */}
+          <div className="flex md:hidden items-center gap-2">
+            <Link
+              href="/signup"
+              className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors"
+            >
+              Try Free
+            </Link>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? (
+                <X className="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
+              ) : (
+                <Menu className="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
+              )}
+            </button>
+          </div>
         </div>
       </header>
 
       {/* Mobile Menu Overlay */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-40 md:hidden">
-          {/* Backdrop */}
+      {mobileMenuOpen && (
+        <>
           <div
-            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
-            onClick={() => setMobileOpen(false)}
+            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
+            onClick={() => setMobileMenuOpen(false)}
           />
-
-          {/* Drawer */}
-          <div className="absolute top-[3.75rem] left-0 right-0 bg-background border-b shadow-lg animate-fade-in-down">
-            <nav className="container-wide py-4 flex flex-col gap-1">
-              {navLinks.map((item) => (
+          <div className="fixed top-16 left-0 right-0 z-50 bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 shadow-lg py-2">
+            <nav className="flex flex-col">
+              {navLinks.map((link) => (
                 <Link
-                  key={item.href}
-                  href={item.href}
-                  className="flex items-center justify-between px-4 py-3 text-sm font-medium text-foreground hover:bg-muted/50 rounded-lg transition-colors group"
-                  onClick={() => setMobileOpen(false)}
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-4 py-3 text-base font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
                 >
-                  {item.label}
-                  <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+                  {link.label}
                 </Link>
               ))}
-
-              <div className="flex flex-col gap-2 pt-3 mt-2 border-t">
-                <Link
-                  href="/login"
-                  className={cn(buttonVariants({ variant: "outline" }), "w-full justify-center")}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Log in
-                </Link>
-                <Link
-                  href="/signup"
-                  className={cn(buttonVariants(), "w-full justify-center")}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Get Started Free
-                </Link>
-              </div>
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-4 py-3 text-base font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+              >
+                Log in
+              </Link>
+              <Link
+                href="/signup"
+                onClick={() => setMobileMenuOpen(false)}
+                className="mx-4 mt-2 mb-2 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-base transition-colors"
+              >
+                Start Free
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </nav>
           </div>
-        </div>
+        </>
       )}
     </>
   );
