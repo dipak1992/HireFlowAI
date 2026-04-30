@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -66,6 +67,7 @@ const JOB_CATEGORIES = [
 ];
 
 export default function OnboardingWizard() {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
@@ -117,6 +119,8 @@ export default function OnboardingWizard() {
     if (result?.error) {
       console.error(result.error);
       setLoading(false);
+    } else {
+      router.push("/dashboard");
     }
   }
 

@@ -45,5 +45,5 @@ export async function completeOnboarding(data: OnboardingData) {
     return { error: "Failed to update profile" };
   }
 
-  redirect("/dashboard");
+  return { success: true };
 }
