@@ -3,7 +3,9 @@
 
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 const FROM = "HireFlow AI <noreply@hireflow.ai>";
 
@@ -34,6 +36,7 @@ export interface UpgradeConfirmationData {
 // ─── Welcome Email ────────────────────────────────────────────────────────────
 
 export async function sendWelcomeEmail(data: WelcomeEmailData) {
+  const resend = getResend();
   return resend.emails.send({
     from: FROM,
     to: data.email,
@@ -78,6 +81,7 @@ export async function sendWelcomeEmail(data: WelcomeEmailData) {
 // ─── Weekly Digest ────────────────────────────────────────────────────────────
 
 export async function sendWeeklyDigest(data: WeeklyDigestData) {
+  const resend = getResend();
   const hasTopJob = data.topJobTitle && data.topJobCompany;
 
   return resend.emails.send({
@@ -146,6 +150,7 @@ export async function sendWeeklyDigest(data: WeeklyDigestData) {
 // ─── Upgrade Confirmation ─────────────────────────────────────────────────────
 
 export async function sendUpgradeConfirmation(data: UpgradeConfirmationData) {
+  const resend = getResend();
   return resend.emails.send({
     from: FROM,
     to: data.email,

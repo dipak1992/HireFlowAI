@@ -3,7 +3,9 @@
 
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY);
+}
 const FROM = "HireFlow AI <noreply@hireflow.ai>";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://hireflow.ai";
 
@@ -21,6 +23,7 @@ export async function sendReferralInviteEmail({
   referralLink: string;
 }): Promise<{ success: boolean; error: string | null }> {
   try {
+    const resend = getResend();
     const { error } = await resend.emails.send({
       from: FROM,
       to: toEmail,
@@ -122,6 +125,7 @@ export async function sendReferralRewardEmail({
   totalCredits: number;
 }): Promise<{ success: boolean; error: string | null }> {
   try {
+    const resend = getResend();
     const { error } = await resend.emails.send({
       from: FROM,
       to: toEmail,

@@ -4,7 +4,9 @@
 import { Resend } from "resend";
 import type { NormalizedJob } from "@/lib/jsearch-types";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY);
+}
 const FROM = "HireFlow AI <noreply@hireflow.ai>";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://hireflow.ai";
 
@@ -97,6 +99,7 @@ export async function sendJobAlertEmail({
     .join("");
 
   try {
+    const resend = getResend();
     const { error } = await resend.emails.send({
       from: FROM,
       to: toEmail,

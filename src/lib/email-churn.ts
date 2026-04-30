@@ -3,7 +3,9 @@
 
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY);
+}
 const FROM = "HireFlow AI <noreply@hireflow.ai>";
 
 // ─── Win-Back Email ───────────────────────────────────────────────────────────
@@ -16,6 +18,7 @@ export async function sendWinBackEmail(
 ) {
   const firstName = name.split(" ")[0] || name;
 
+  const resend = getResend();
   if (daysSinceCancelled <= 14) {
     // Day 7 email: 50% off offer
     return resend.emails.send({
