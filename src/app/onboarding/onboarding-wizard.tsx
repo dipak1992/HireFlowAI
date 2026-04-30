@@ -70,6 +70,7 @@ export default function OnboardingWizard() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   // Form state
   const [goal, setGoal] = useState<OnboardingGoal | "">("");
@@ -89,20 +90,24 @@ export default function OnboardingWizard() {
       case 1:
         return goal !== "";
       case 2:
-        return location.trim() !== "";
+        return true; // location is optional
       case 3:
-        return payMin !== "" && payMax !== "";
+        return true; // pay is optional
       case 4:
-        return jobCategory !== "";
+        return true; // job category is optional
       default:
         return false;
     }
   }
 
   async function handleComplete() {
-    if (!goal) return;
+    if (!goal) {
+      setError("Please select your job search goal to continue.");
+      return;
+    }
 
     setLoading(true);
+    setError("");
 
     const data: OnboardingData = {
       goal: goal as OnboardingGoal,
@@ -114,12 +119,19 @@ export default function OnboardingWizard() {
       remote_preference: remotePreference,
     };
 
-    const result = await completeOnboarding(data);
+    try {
+      const result = await completeOnboarding(data);
 
-    if (result?.error) {
-      console.error(result.error);
-      setLoading(false);
-    } else {
+      if (result?.error) {
+        console.error("Onboarding error:", result.error);
+        // Still redirect — preferences save failure shouldn't block the user
+        router.push("/dashboard");
+      } else {
+        router.push("/dashboard");
+      }
+    } catch (err) {
+      console.error("Onboarding exception:", err);
+      // Always redirect even on error
       router.push("/dashboard");
     }
   }
@@ -400,6 +412,13 @@ export default function OnboardingWizard() {
               )}
             </CardContent>
           </Card>
+        )}
+
+        {/* Error message */}
+        {error && (
+          <div className="rounded-lg border border-red-200 bg-red-50 dark:bg-red-950/30 px-4 py-3 text-sm text-red-700 dark:text-red-400">
+            {error}
+          </div>
         )}
 
         {/* Navigation Buttons */}

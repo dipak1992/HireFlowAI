@@ -48,6 +48,7 @@ export default function ResumeStudioPage() {
   const [uploadOpen, setUploadOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [createError, setCreateError] = useState("");
 
   useEffect(() => {
     loadResumes();
@@ -61,10 +62,21 @@ export default function ResumeStudioPage() {
   }
 
   function handleCreate(source: ResumeSource) {
+    setCreateError("");
     startTransition(async () => {
-      const result = await createResume(source, "ats");
-      if (result?.id) {
-        router.push(`/dashboard/resume/${result.id}`);
+      try {
+        const result = await createResume(source, "ats");
+        if (result?.id) {
+          setCreateOpen(false);
+          router.push(`/dashboard/resume/${result.id}`);
+        } else if (result?.error) {
+          setCreateError(result.error as string);
+        } else {
+          setCreateError("Failed to create resume. Please try again.");
+        }
+      } catch (err) {
+        console.error("Create resume error:", err);
+        setCreateError("An unexpected error occurred. Please try again.");
       }
     });
   }
@@ -195,6 +207,11 @@ export default function ResumeStudioPage() {
               <div className="flex items-center justify-center gap-2 py-2 text-sm text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Creating your resume…
+              </div>
+            )}
+            {createError && (
+              <div className="rounded-lg border border-red-200 bg-red-50 dark:bg-red-950/30 px-4 py-3 text-sm text-red-700 dark:text-red-400">
+                {createError}
               </div>
             )}
           </DialogContent>
