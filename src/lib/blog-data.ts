@@ -594,6 +594,372 @@ Landing a remote software job requires the same fundamentals as any job search �
 
 The market is competitive, but it's also global. If you present yourself well, you have access to opportunities anywhere in the world.`,
   },
+
+  // ── Task 2.6 — 5 new SEO-targeted posts ──────────────────────────────────────
+  {
+    slug: "ats-resume-tips-2025",
+    title: "ATS Resume Tips for 2025: Beat the Bots and Get More Interviews",
+    excerpt:
+      "Over 98% of Fortune 500 companies use ATS software. Here's exactly how to format and optimize your resume to pass automated screening in 2025.",
+    category: "Resume Tips",
+    date: "January 8, 2025",
+    readTime: "7 min read",
+    author: "HireFlow AI Team",
+    content: `## Why ATS Still Matters in 2025
+
+Applicant Tracking Systems haven't gone away — they've gotten smarter. Modern ATS platforms like Workday, Greenhouse, and Lever now use AI-assisted parsing that's better at reading resumes, but also more strict about formatting and keyword matching.
+
+If your resume isn't optimized, it gets filtered before a human ever sees it.
+
+## The 5 Most Common ATS Failures
+
+### 1. Non-Standard Formatting
+Tables, text boxes, headers/footers, and multi-column layouts confuse ATS parsers. Stick to a single-column format with standard section headers.
+
+### 2. Missing Keywords
+ATS systems match your resume against the job description. If the job says "project management" and your resume says "led projects," that's a mismatch.
+
+### 3. Wrong File Format
+Submit as .docx or .pdf (text-based, not scanned). Image-based PDFs are invisible to ATS.
+
+### 4. Inconsistent Job Titles
+If your title was "Growth Hacker" but the ATS is searching for "Marketing Manager," you won't appear. Mirror the job title in your summary when accurate.
+
+### 5. No Skills Section
+A dedicated skills section makes it easy for ATS to find your competencies. List both hard skills and relevant soft skills.
+
+## The 2025 ATS Optimization Checklist
+
+- Use standard section headers: Work Experience, Education, Skills, Certifications
+- Submit as .docx or text-based PDF
+- Include a dedicated Skills section with 10–15 relevant skills
+- Mirror exact keywords from the job description
+- Use a single-column layout with standard fonts (Arial, Calibri, Georgia)
+- Avoid tables, text boxes, graphics, and headers/footers
+- Quantify achievements with numbers wherever possible
+- Include your LinkedIn URL and professional email
+
+## How AI Changes the Game in 2025
+
+Modern ATS platforms now use semantic matching — they understand that "built REST APIs" and "API development" mean the same thing. But they still reward exact keyword matches.
+
+The best approach: use the exact language from the job description AND include natural variations. HireFlow AI analyzes job descriptions and suggests exactly which keywords to add and where to place them.
+
+## Testing Your Resume
+
+Before submitting, paste your resume text into a plain text editor. If it reads clearly without formatting, it will parse well in ATS. Tools like Jobscan can also give you a match score against specific job descriptions.
+
+The goal is a resume that passes ATS filters AND reads well to humans. These aren't mutually exclusive — a clean, keyword-rich resume achieves both.`,
+  },
+  {
+    slug: "entry-level-jobs-no-experience",
+    title: "How to Get an Entry-Level Job With No Experience (2025 Guide)",
+    excerpt:
+      "No experience? No problem. Here's the proven strategy for landing your first professional role when you're starting from zero.",
+    category: "Job Search",
+    date: "January 15, 2025",
+    readTime: "8 min read",
+    author: "HireFlow AI Team",
+    content: `## The Entry-Level Paradox
+
+"Entry-level" jobs that require 2–3 years of experience. Sound familiar? It's one of the most frustrating realities of the modern job market — but it's not insurmountable.
+
+Here's the truth: employers want proof you can do the work. Experience is just one form of proof. There are others.
+
+## What Counts as "Experience"
+
+Most candidates think experience means paid, full-time work. Employers actually care about demonstrated skills. These all count:
+
+- **Internships** (paid or unpaid)
+- **Freelance projects** (even for friends or nonprofits)
+- **Personal projects** (apps, websites, content, research)
+- **Volunteer work** with relevant responsibilities
+- **Academic projects** with real-world applications
+- **Certifications** that demonstrate skill mastery
+- **Open source contributions** (for tech roles)
+
+## Building Experience From Scratch
+
+### Step 1: Identify the Skills Gap
+Look at 10–15 job postings for your target role. What skills appear most often? Make a list of the top 5–8 required skills.
+
+### Step 2: Build Evidence for Each Skill
+For each skill, create one concrete example:
+- Take a free course and build a project
+- Volunteer for an organization that needs that skill
+- Do a small freelance project (even for free initially)
+
+### Step 3: Document Everything
+Create a portfolio, GitHub profile, or simple website that shows your work. Employers can't evaluate what they can't see.
+
+## Resume Strategy for Entry-Level Candidates
+
+**Lead with Skills, Not Experience**: Put your skills section near the top. Lead with what you can do.
+
+**Use a Functional or Hybrid Format**: Instead of a chronological work history, organize by skill area.
+
+**Quantify Academic and Project Work**: "Built a React app with 500+ users" is more compelling than "completed web development course."
+
+**Include a Strong Summary**: Write 2–3 sentences that position you as a capable candidate, not an inexperienced one.
+
+## The Networking Shortcut
+
+For entry-level roles, referrals are especially powerful. A recommendation from a current employee can bypass the ATS entirely.
+
+How to get referrals with no network:
+1. Connect with alumni from your school who work at target companies
+2. Reach out to people in your target role on LinkedIn with a specific, brief message
+3. Attend industry meetups and events (many are free)
+4. Engage with company content on LinkedIn before reaching out
+
+## The Bottom Line
+
+Getting your first job is harder than getting your second. But every experienced professional started with zero experience. The candidates who break through are the ones who build evidence of their skills before they have a formal job title to point to.`,
+  },
+  {
+    slug: "how-to-write-cover-letter-with-ai",
+    title: "How to Write a Cover Letter With AI (That Doesn't Sound Like AI)",
+    excerpt:
+      "AI can write your cover letter in seconds — but most AI cover letters are obvious and forgettable. Here's how to use AI as a starting point and make it genuinely compelling.",
+    category: "Resume Tips",
+    date: "January 22, 2025",
+    readTime: "6 min read",
+    author: "HireFlow AI Team",
+    content: `## The AI Cover Letter Problem
+
+AI can generate a cover letter in 10 seconds. The problem: so can every other candidate. Recruiters are now drowning in AI-generated cover letters that all sound the same — generic, overly formal, and devoid of personality.
+
+The solution isn't to avoid AI. It's to use AI as a first draft, then make it human.
+
+## What AI Does Well
+
+AI excels at:
+- Structuring your letter logically
+- Matching your experience to the job requirements
+- Generating a professional opening paragraph
+- Ensuring you don't miss key points from the job description
+
+## What AI Gets Wrong
+
+AI consistently fails at:
+- Capturing your authentic voice
+- Including specific, memorable details
+- Showing genuine enthusiasm for the company
+- Making you sound like a real person
+
+## The 3-Step AI Cover Letter Process
+
+### Step 1: Generate the Draft
+Use an AI tool (like HireFlow AI) to generate a first draft based on your resume and the job description. Don't edit yet — just get the raw material.
+
+### Step 2: Humanize It
+Go through the draft and make these changes:
+
+**Replace generic phrases**: "I am excited to apply for this position" becomes "I've been following [Company]'s work on [specific product/initiative] for the past year, and this role is exactly what I've been building toward."
+
+**Add one specific detail**: Mention something specific about the company — a recent product launch, a blog post you read, a mission statement that resonates. This takes 5 minutes of research and makes a huge difference.
+
+**Inject your voice**: Read it out loud. Does it sound like you? If not, rewrite the sentences that feel stiff.
+
+**Cut the fluff**: AI loves filler phrases like "I am a highly motivated self-starter." Delete them. Every sentence should earn its place.
+
+### Step 3: The 3-Paragraph Structure
+
+**Paragraph 1 — The Hook**: Why this company, why this role, why now. Be specific.
+
+**Paragraph 2 — The Evidence**: Your most relevant experience, with one specific achievement that proves you can do the job.
+
+**Paragraph 3 — The Close**: Express genuine enthusiasm, mention you'd love to discuss further, and thank them for their time.
+
+## The Test
+
+Read your cover letter and ask: "Could this letter have been written by anyone else applying to this job?" If yes, it needs more specificity.
+
+The best cover letters feel like they were written by someone who genuinely wants this specific job at this specific company — not just any job.`,
+  },
+  {
+    slug: "job-search-tips-for-career-changers",
+    title: "Job Search Tips for Career Changers: How to Pivot Successfully",
+    excerpt:
+      "Changing careers is harder than finding a new job in your field — but it's more common than ever. Here's the strategy that works.",
+    category: "Career Growth",
+    date: "February 3, 2025",
+    readTime: "9 min read",
+    author: "HireFlow AI Team",
+    content: `## Career Change Is the New Normal
+
+The average person changes careers (not just jobs) 5–7 times in their lifetime. The pandemic accelerated this trend dramatically. If you're considering a career pivot, you're in good company.
+
+But career changes require a different job search strategy than a standard job hunt.
+
+## The Transferable Skills Framework
+
+The biggest mistake career changers make: focusing on what they don't have instead of what they do.
+
+Every career builds transferable skills. The key is identifying which of your existing skills are valuable in your target field.
+
+**Common transferable skills**:
+- Project management and organization
+- Communication and presentation
+- Data analysis and problem-solving
+- Leadership and team management
+- Customer relationship management
+- Budget management
+- Research and synthesis
+
+**Exercise**: List your top 10 skills from your current career. Then look at 10 job postings in your target field. How many of your skills appear in those postings?
+
+## The Bridge Strategy
+
+Don't try to jump directly from your current career to your target career. Build a bridge.
+
+**Step 1: Identify the gap**
+What skills, credentials, or experience does your target role require that you don't have?
+
+**Step 2: Fill the gap systematically**
+- Take targeted courses or certifications
+- Do freelance or volunteer work in the new field
+- Build a portfolio project
+- Find a "bridge role" that uses skills from both fields
+
+**Step 3: Reframe your narrative**
+Your career change isn't a weakness — it's a unique perspective. A former teacher who becomes a UX designer brings empathy and communication skills most designers lack. A former nurse who moves into healthcare technology brings domain expertise that's invaluable.
+
+## Resume Strategy for Career Changers
+
+**Use a hybrid resume format**: Lead with a skills section, then work experience. This puts your transferable skills front and center.
+
+**Rewrite your summary**: Your summary should position you for where you're going, not where you've been. "Former teacher transitioning to UX design, with 5 years of experience in user research, curriculum design, and iterative feedback processes."
+
+**Tailor aggressively**: Career changers need to tailor more than anyone. Every application should emphasize the skills most relevant to that specific role.
+
+## The Networking Imperative
+
+For career changers, networking is even more important than for standard job seekers. You're asking employers to take a chance on someone without a traditional background. A referral from a trusted employee dramatically reduces that perceived risk.
+
+How to build a network in a new field:
+- Attend industry events and meetups
+- Join professional associations
+- Engage in online communities (LinkedIn groups, Reddit, Discord)
+- Reach out to people in your target role for informational interviews
+
+## Timeline Expectations
+
+Career changes take longer than standard job searches. Plan for 3–6 months minimum. This isn't failure — it's the reality of building credibility in a new field.
+
+The candidates who succeed are the ones who treat the career change as a project: systematic, patient, and persistent.`,
+  },
+  {
+    slug: "best-jobs-for-remote-work-2025",
+    title: "The 15 Best Jobs for Remote Work in 2025 (With Salary Ranges)",
+    excerpt:
+      "Remote work is here to stay — but not all remote jobs are equal. Here are the 15 best remote roles by salary, growth, and work-life balance.",
+    category: "Tech Careers",
+    date: "February 12, 2025",
+    readTime: "10 min read",
+    author: "HireFlow AI Team",
+    content: `## Remote Work in 2025
+
+After the post-pandemic return-to-office push, remote work has stabilized at a new normal: roughly 30% of professional jobs are fully remote, with another 40% hybrid. The fully remote roles that remain are highly competitive — and highly compensated.
+
+Here are the 15 best remote jobs in 2025, ranked by a combination of salary, demand, and work-life balance.
+
+## Top Remote Jobs by Category
+
+### Technology
+
+**1. Software Engineer**
+Average salary: $120,000–$180,000
+Remote availability: Very high
+Why it's great: High demand, strong pay, and most tech companies have embraced permanent remote work.
+
+**2. Data Scientist / ML Engineer**
+Average salary: $130,000–$200,000
+Remote availability: High
+Why it's great: AI boom has created massive demand. Fully async-friendly work.
+
+**3. DevOps / Cloud Engineer**
+Average salary: $125,000–$175,000
+Remote availability: Very high
+Why it's great: Infrastructure work is inherently remote-friendly. AWS, Azure, and GCP certifications open doors.
+
+**4. Product Manager**
+Average salary: $110,000–$160,000
+Remote availability: Moderate-High
+Why it's great: Strong pay, strategic work, and many companies have adapted PM roles to remote.
+
+**5. UX/UI Designer**
+Average salary: $85,000–$140,000
+Remote availability: High
+Why it's great: Portfolio-based hiring means location matters less. Strong demand across industries.
+
+### Business and Finance
+
+**6. Financial Analyst**
+Average salary: $75,000–$120,000
+Remote availability: Moderate
+Why it's great: Excel and data work translates well to remote. Growing demand in fintech.
+
+**7. Digital Marketing Manager**
+Average salary: $70,000–$110,000
+Remote availability: Very high
+Why it's great: Entirely digital work. Strong demand as companies invest in online presence.
+
+**8. Content Strategist / Writer**
+Average salary: $60,000–$100,000
+Remote availability: Very high
+Why it's great: Fully async work. AI has increased demand for human-quality content strategy.
+
+**9. Project Manager (PMP)**
+Average salary: $85,000–$130,000
+Remote availability: Moderate-High
+Why it's great: PMP certification commands premium pay. Remote project management is now standard.
+
+### Healthcare and Education
+
+**10. Telehealth Physician / Nurse Practitioner**
+Average salary: $100,000–$200,000+
+Remote availability: High (for telehealth roles)
+Why it's great: Telehealth has exploded. Flexible scheduling and no commute.
+
+**11. Instructional Designer**
+Average salary: $65,000–$100,000
+Remote availability: Very high
+Why it's great: E-learning boom has created strong demand. Fully async-friendly.
+
+**12. Mental Health Therapist (Telehealth)**
+Average salary: $60,000–$100,000
+Remote availability: High
+Why it's great: Platforms like BetterHelp and Talkspace have created massive remote demand.
+
+### Other High-Value Remote Roles
+
+**13. Cybersecurity Analyst**
+Average salary: $95,000–$150,000
+Remote availability: High
+Why it's great: Critical demand, strong pay, and security work is inherently remote-compatible.
+
+**14. Technical Writer**
+Average salary: $70,000–$110,000
+Remote availability: Very high
+Why it's great: Fully async, strong demand in tech and healthcare.
+
+**15. Customer Success Manager**
+Average salary: $65,000–$100,000
+Remote availability: Very high
+Why it's great: SaaS boom has created massive demand. Strong career growth path.
+
+## How to Find Remote Jobs
+
+- **Remote-specific boards**: Remote.co, We Work Remotely, Remote OK
+- **LinkedIn**: Use the "Remote" filter in job search
+- **Company career pages**: Many remote-first companies don't post on job boards
+- **HireFlow AI**: Aggregates remote listings and matches them to your skills
+
+## The Bottom Line
+
+The best remote jobs in 2025 share common traits: they're knowledge-based, async-friendly, and in high demand. If you're targeting remote work, focus on building skills in these areas and positioning yourself as a remote-ready candidate.`,
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | undefined {

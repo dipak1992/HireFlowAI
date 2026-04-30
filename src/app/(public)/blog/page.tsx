@@ -10,13 +10,13 @@ export const metadata: Metadata = {
 };
 
 export default function BlogPage() {
-  // Show the 5 required articles first, then the rest
+  // Show the 5 new 2025 SEO posts first, then the rest
   const featuredSlugs = [
-    "how-to-tailor-resume-for-every-job",
-    "warehouse-jobs-hiring-texas",
-    "linkedin-vs-resume-what-recruiters-read",
-    "how-ai-helps-find-jobs-faster",
-    "7-mistakes-stopping-candidates-getting-interviews",
+    "ats-resume-tips-2025",
+    "entry-level-jobs-no-experience",
+    "how-to-write-cover-letter-with-ai",
+    "job-search-tips-for-career-changers",
+    "best-jobs-for-remote-work-2025",
   ];
 
   const featured = featuredSlugs
