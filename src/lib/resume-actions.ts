@@ -118,8 +118,8 @@ export async function createResume(source: ResumeSource, template: ResumeTemplat
     .single();
 
   if (error) {
-    console.error("Error creating resume:", error);
-    return { error: "Failed to create resume" };
+    console.error("Error creating resume:", JSON.stringify(error));
+    return { error: `Failed to create resume: ${error.message} (code: ${error.code})` };
   }
 
   return { id: data.id };
